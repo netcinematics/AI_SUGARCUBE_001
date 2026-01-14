@@ -8,12 +8,25 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AXI_AI&#8482;</title>
+    <title>AI_VIZ&#8482;</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="./favicon.ico" />
     <!-- <script src="./data/default_data.js"></script> -->
     <!--****************LOAD-CUSTOM-DATA-MODULE******************-->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import { initBrainViz } from './BRAIN_VIZ_CANVAS.js';
+        window.addEventListener('load', () => {
+            initBrainViz();
+        });
+    </script>
     <script> //****************IMPORT _default_ DATA-MODULE******************
         // let _default_TICKR_DATA_MAP_Monthly = default_TICKR_DATA_MAP_Monthly
         // let _default_TRADE_DATA_MAP_Monthly = default_TRADE_DATA_MAP_Monthly
@@ -659,7 +672,7 @@
 
 <body class="scrollBarV">
     <header style="position:absolute;top:0.555em;align-self:center;display:flex;">
-        AXI_AI<span style="font-size:0.444em">&#8482;</span></header>
+        AI_VIZ<span style="font-size:0.444em">&#8482;</span></header>
     <menu class="MAIN_MENU">
         <button id="INFO_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_INFO_VIEW()">INFO</button>
         <button id="VIZ_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_VIZ_VIEW()">VIZ</button>
@@ -703,63 +716,137 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
     <header class="mainTitle expanderROW">
         <span class="boxTitle">
             <span style="font-size:0.777em; color:cyan">~</span>
-            <span>INFO</span>
+            <span> 🍬AI_SUGARCUBE:🧁</span>
         </span>
     </header>
-    <hr />
-    <article id="TKR_RENDER_FRAME"></article>
+
     <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
         <!-- <span style="font-size:1em;">INFO:</span><br> -->
         <div style="font-size:0.888em;" style="display:flex; flex-direction: column;">
-            <h2>👓 OVERVIEW:</h2>
-            This is a remarkable AI NEURAL NETWORK TOOL.<br>
+            <h2>🌌 OVERVIEW: 👓</h2>
+            AI_SUGARCUBE, is a Hyper-dimensional, embed space, DATA VISUALIZATION APP.<br>
             <br>
             <hr><br>
-            <h2>🗺️ HISTORY:</h2>
-            This app was generated as an AI SERIES: from 2022 to 2024.<br>
-            As early adopter enthusiast to learn about AI, while getting Google Badges from Google Developer
-            program. The other pages were: 1) AI WORD GAME,
-            2) AI VOICE and TEXT transcriber, 3) AI_CREATIVE_DEV technical artist (spazefalcon).
+            <h2>🗺️ HISTORY: 🌃</h2>
+            This app was generated as an AI SERIES: from 2022 to 2026.<br>
             <br><br>
             <hr><br>
-            <h2>🏡 SANDBOX STUDY:</h2>
-            This is a SANDBOX study of emergent AI technology:
+            <h2>✨ SANDBOX STUDY: 🏖️</h2>
+            1. Visualize AI Manifolds. <br>
+            <div style="display: flex;
+    gap: 22px;
+    margin: 1em 0;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;">
+                <img src="./images/viz1_ 2025-12-13 114153.png" alt="Visualization 1"
+                    style="width: 33%; border: 1px solid cyan; border-radius: 4px;">
+                <img src="./images/viz2_2025-02-11 114359.png" alt="Visualization 2"
+                    style="width: 44%; border: 1px solid cyan; border-radius: 4px;">
+                <img src="./images/viz3_2025-02-11 113912.png" alt="Visualization 3"
+                    style="width: 55%; border: 1px solid cyan; border-radius: 4px;">
+            </div>
+            <h3>🔭 RESULT: 🔬</h3>
+            AI_SUGARCUBE, is a simple 3D Structure, a 50 X 50 X 50 Matrix, like a telescope, a microscope, or a
+            kaleidoscope.
+            Renders <i>increadable expressiveness</i> of metastate context, in vector hyper-dimensions.
+
+            <br>
+            <hr><br>
+            <h2>🌟 GOALS: 💫</h2>
             <ol>
-                <li>Anthropic Claude</li>
-                <li>GitHub Copilot</li>
-                <li>OpenAI ChatGPT</li>
-                <li>Google Gemini</li>
+                <li>VISUALIZE AI MANIFOLD.</li>
+                <li>DATA IN HIGHER DIMENSIONS, with dynamic legend.</li>
+                <li>Variable Vector Spectrums.</li>
+                <li>In fixed position (optimized: t-SNE/PCA)</li>
+                <li>AI AGENTS undestand the vectors and <i>fill in the blanks!</i></li>
+                <li>Humans in the loop (HITL), conduct brain_viz surgery.</li>
             </ol>
-            <h3>🌳 RESULT:</h3>
-            <i>Google Gemini won.</i>
+            <br>
             <hr><br>
 
-            <h2>⛰️ PROJECT:</h2>
-            Each module was generated by AI, edited by human (me),
-            in iterative workflow. <br>
-            To SHOW AI progression, over the years.<br>
-            From CNN to RNN to LSTM to GRU to Transformer to BLOOM to GPT to GEMINI.<br>
+
+            <h2>⛰️ PROJECT:🏰</h2>
+            <ul style="list-style:circle; margin-left:12%; padding-left: 0;line-height: 2em;">
+                <li>
+                    <a href="./origins/index_1.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 1
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_2.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 2
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_3.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 3
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_4.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 4
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_5.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 5
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_6.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 6
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_7.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 7
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_8.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 8 (final 3D template)
+                    </a>
+                </li>
+            </ul>
+
+            <br>
+            <hr>
+            <br>
+            <section
+                style="border-radius:14px;display: flex; justify-content: center; box-shadow: 0 0 15px green; padding: 1em; margin: 1em 0;">
+                <img src="./images/viz4_2026-01-13 202959.png" alt="Visualization 3"
+                    style="width: 66%; border: 1px solid cyan; border-radius: 4px;">
+            </section>
+
+
             <br>
             <hr><br>
-            <h2>🔭 GOALS:</h2>
+            <h2>🔬METHODOLOGY:🤖</h2>
+            1) Following an AI generated roadmap: <br>
+            <h3>
+                METHOD:
+                <pre>I used AI - to build AI!</pre>
+            </h3>
+            <br>
+            2) Adding new tools as modules.<br>
+            3)To visualize the "Neural Network" changes in the MATRIX.
             <hr>
-            <h1>1)To visualize the "Neural Network" changes in the MATRIX.</h1>
-            <hr>
-            2) With a HEATMAP.<br>That can be <i>played back like a movie</i>.
+            4) With a HEATMAP.<br>That can be <i>played back like a movie</i>.
             <hr>
             <br>
-            3) And for the purpose of <b>VISUALIZING "Neural Network" training epochs</b>,
+            5) And for the purpose of <b>VISUALIZING "Neural Network" training epochs</b>,
             with future variations (like
-            mHC).</b> <br>
+            mHC), Attention Mechanisms, Activation Functions, etc.</b> <br>
             <hr>
-            4) In a 3D WEBGL MATRIX on GPU with three.js (3D embed space).<br>
-            <hr>
-            <h2>🔬METHODOLOGY:</h2>
-            1) Following an AI generated roadmap: <br>
-            <h3>I used AI - to build AI!</h3>
-            2) Asking AI to show me all AI variations - in a similar format.<br>
-            3) Gradually building a "Brain Stem". <br>
-            4) Adding new tools as modules.<br>
             <br>
             <hr>
             <h2>🤯 CONCLUSION:</h2>
@@ -769,19 +856,10 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
             <br>And also for uploading audio and video files.
             <br>🎬 🎥 📹 🎵 🎶 🔊 🎧
 
-            The modules stopped when I built a <b>MUCH BETTER EMBED VISUALIZER</b>
-            called <b>"SUGARCUBE"</b>, with brilliant matrix visualization innovations!
-            <br>
-            <hr>
-            Also I switched to build a Gemini Assistant - which was much more powerful.
-            <br>
-            <hr>
-            So this is just a lonely (but elegant) NEURAL NETWORK sandbox.
-            <br>
-            ❤️ ~ spazefalcon ~ : )
+
             <hr>
 
-        </div><br>
+            <br>
     </aside>
     <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
         <button id="addTickBtn1" class="blackBTN" onclick="">add🎇</button>
@@ -796,11 +874,16 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
     <article class="mainTitle expanderROW">
         <span class="boxTitle" style="width:100%;">
             <span><span style="font-size:0.777em; color:cyan">~</span>
-                VIZ</span>
+                AI_VIZ</span>
         </span>
     </article>
-    <hr>
+    <article id="TKR_RENDER_FRAME">
+        <div id="CANVAS_BRAIN_VIZ_1" style="width: 100%; height: 500px; 
+        border: 1px solid steelblue;border-radius:22px; margin-top: 20px;">
+        </div>
+    </article>
 
+    <hr>
     <section class="EXPANDER_Item MOBILE_Box_Sizer">
         <header class="mainTitle expanderROW">
             <span>AI_BRAIN_VIZ:</span>
@@ -885,8 +968,8 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
 
 
 
-        <script type="text/javascript" src="./threeJS_81.js"></script>
-        <script type="text/javascript" src="./scatter3D.js"></script>
+        <!-- <script type="text/javascript" src="./threeJS_81.js"></script> -->
+        <!-- <script type="text/javascript" src="./scatter3D.js"></script> -->
         <script type="text/javascript">
             // Define a function to initialise the plot:
             function init_3D_MATRIX() {
@@ -1649,7 +1732,7 @@ tokens.forEach(token => {
     <!-- <script src="./script_txt_a_upper_1.js"  type="module"></script> -->
     <!-- <script src="./script_AI_BRAIN_STEM_2.js"  type="module"></script> -->
     <!-- <script src="./script_AI_BRAIN_STEM_3.js"  type="module"></script> -->
-    <script src="./module_ai_BRAIN_STEM_4.js" type="module"></script>
+    <!-- <script src="./module_ai_BRAIN_STEM_4.js" type="module"></script> -->
     <!-- <script src="./script_letter_predictor_1.js"></script> -->
     <!-- <script src="./script_neologism_1.js"></script> -->
     <!-- <script src="./script_cluster_1.js"></script> -->
