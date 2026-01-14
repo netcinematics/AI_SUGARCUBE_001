@@ -1359,10 +1359,24 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
          * - ai_viewz_MATRIX
          *  - ability to save quarterly NOTES in localstorage
         \************************************************/
+        // let ai_viewz = {
+        //     expanderBTN1a: true,
+        //     expanderBTN1b: false,//dynamic...
+        // }; //btn id : view state.
+
         let ai_viewz = {
-            expanderBTN1a: true,
-            expanderBTN1b: false,//dynamic...
-        }; //btn id : view state.
+            "expanderBTN1a": true,
+            "expanderBTN1b": true,
+            "expander_BRAIN_VIZ": false,
+            "expander_TIMELINE": false,
+            "expanderBTN2a": true,
+            "expanderBTN3a": true,
+            "expander_VIZ_LOG": false,
+            "expander_PLAYBACK": false,
+            "expander_3D_MATRIX": false
+        }
+
+
 
         function init_ai_viewz() { //READ from LOCAL STORAGE
             if (!localStorage.ai_viewz) {//first init
