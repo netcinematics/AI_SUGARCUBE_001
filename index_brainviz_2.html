@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AXI_AI&#8482;</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./favicon.ico" />
+    <!-- <script src="./data/default_data.js"></script> -->
+    <!--****************LOAD-CUSTOM-DATA-MODULE******************-->
+    <script> //****************IMPORT _default_ DATA-MODULE******************
+        // let _default_TICKR_DATA_MAP_Monthly = default_TICKR_DATA_MAP_Monthly
+        // let _default_TRADE_DATA_MAP_Monthly = default_TRADE_DATA_MAP_Monthly
+        // let _default_MOMZ_DATA_MAP = default_MOMZ_DATA_MAP
+    </script> <!-- **************************END-CUSTOM-DATA-MODULE******************-->
+    <!-- <script type="text/javascript" src="./module/lwc_dev_deriv_4.2.js"></script> -->
+    <style>
+        body {
+            background: black;
+            color: steelblue;
+            font-size: 1em;
+            padding: 1em 2% 2% 2%;
+            font-family: verdana;
+            height: 100%;
+            min-height: 100%;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            margin-top: 2em;
+            user-select: none;
+        }
+
+        /* FRAME *******************************FRAME*****************************/
+        .FRAME {
+            border: solid 1px steelblue;
+            box-shadow: 1px 1px 3px 0px steelblue;
+            border-radius: 10px;
+            padding: 2%;
+            margin: 0.333em;
+        }
+
+        .BTN {
+            color: aqua;
+            background: #000033;
+            border: solid 1px seagreen;
+            text-align: center;
+            border-radius: 13px;
+            box-shadow: 1px 1px 1px teal;
+            cursor: pointer;
+            height: 1.444em;
+        }
+
+        .BTN:hover {
+            color: lime;
+            border: solid 1px lime;
+            box-shadow: 1px 1px 1px black;
+        }
+
+        .BTN:active {
+            color: cyan;
+            background: blue;
+            border: solid 1px teal;
+            box-shadow: 1px 1px 1px black;
+            height: 1.444em;
+        }
+
+        .BTN.selectedMAINBTN {
+            color: cyan;
+            background: darkblue;
+            border: solid 1px teal;
+        }
+
+        .blackBTN.selectedSUBBTN {
+            color: cyan;
+            box-shadow: inset 1px 1px 12px 0px blue;
+            border: solid 1px teal;
+        }
+
+        /* BTN **********************************BTN**************************/
+        /* .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
+        cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;} */
+        .blackBTN {
+            border-radius: 13px;
+            background: black;
+            cursor: pointer;
+            font-size: 0.777em;
+            color: aqua;
+            line-height: 1;
+            box-shadow: 1px 1px 1px aqua;
+            padding: 0.555% 1% 0.555% 1%;
+        }
+
+        /**************RESPONSIVE BTN *******************/
+        /* .BTN:hover{border:1px solid steelblue; color:purple}
+    .BTN:active{border:1px solid lime; color:green} */
+        .blackBTN:hover {
+            border: 2px solid lime;
+            background: black;
+            color: green
+        }
+
+        .blackBTN:active {
+            border: 2px solid steelblue;
+            background: black;
+            color: purple
+        }
+
+        @media only screen and (max-width: 800px) {
+
+            /************* TABLET */
+            body {
+                background-color: #00070d;
+            }
+
+            .BTN {
+                font-size: 1.111em;
+            }
+
+            /* .blackBTN{font-size:0.999em;} */
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            /************* PHONE */
+            body {
+                background-color: #07000c;
+            }
+
+            .BTN {
+                font-size: 1em;
+            }
+
+            .blackBTN {
+                font-size: 0.888em;
+            }
+        }
+
+        /* ***********************************CUSTOM SCROLLBAR****************************/
+        .scrollBarV {
+            overflow-x: scroll;
+        }
+
+        .scrollBarV::-webkit-scrollbar-track {
+            background-color: #010213;
+            border-radius: 13px;
+        }
+
+        .scrollBarV::-webkit-scrollbar {
+            width: 0.666em;
+            height: 100%;
+        }
+
+        .scrollBarV::-webkit-scrollbar-thumb {
+            background-color: #04223c;
+            border-radius: 13px;
+            background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 26%, transparent 26%, transparent 51%, rgba(255, 255, 255, -0.4) 51%, rgba(255, 255, 255, 0.6) 74%, transparent 74%, transparent);
+        }
+
+        .scrollBarH {
+            overflow-y: scroll;
+        }
+
+        .scrollBarH::-webkit-scrollbar-track {
+            background-color: #010213;
+            border-radius: 13px;
+        }
+
+        .scrollBarH::-webkit-scrollbar {
+            height: 0.666em;
+            width: 100%;
+        }
+
+        .scrollBarH::-webkit-scrollbar-thumb {
+            background-color: #04223c;
+            border-radius: 13px;
+            /* background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 26%, transparent 26%, transparent 51%, rgba(255, 255, 255, -0.4) 51%, rgba(255, 255, 255, 0.6) 74%, transparent 74%, transparent); */
+        }
+
+        .txtSizer::-webkit-scrollbar {
+            width: 1.222em;
+            background: black;
+        }
+
+        /* option:active {
+        background-color: darkslateblue;
+        color: aqua;
+    }  */
+        /*******CUSTOM MAIN MENU *******************MAIN MENU*********************************/
+        .MAIN_MENU {
+            background: rgb(72, 80, 111);
+            border: solid 1px rgb(0, 128, 45);
+            border-radius: 13px;
+            padding: 0.666em 1em 0.666em 1em;
+            box-shadow: inset 0px 3px 10px purple;
+            display: flex;
+            justify-content: space-evenly;
+            max-width: 80%;
+            margin: -1em auto 1.111em auto;
+            font-size: 0.666em;
+            padding: 0.444em;
+            display: flex;
+            flex: 0;
+        }
+
+        .hiddenTab {
+            display: none !important;
+        }
+
+        /* CUSTOM HR ***************************HR***********************/
+        hr {
+            border-top: solid 1px steelblue;
+            border-bottom: none;
+            border-radius: 2px;
+        }
+
+        /* CUSTOM INPUT ***************************INPUT***********************/
+        .tkrTXT_BOX {
+            border-radius: 13px;
+            text-align: center;
+            background: darkslategrey;
+            color: cyan;
+            width: 5em;
+            padding: 0;
+            font-size: 0.888em;
+            margin: 0.444em 0px;
+        }
+
+        /* END CUSTOM INPUT ***************************END INPUT***********************/
+        .deleteTXT {
+            font-size: 0.666em;
+            margin: 0 0 0 1em;
+            padding: 0.222em 0.222em 0.222em 0.444em;
+            display: flex;
+        }
+
+        .defaultTXT {
+            font-size: 0.888em
+        }
+
+        .delTXTBTN {
+            color: aqua;
+            background: #000033;
+            border: solid 1px seagreen;
+            width: 1em;
+            border-radius: 50%;
+            box-shadow: 1px 1px 1px teal;
+            cursor: pointer;
+            height: 1.222em;
+            font-size: 1em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 0.222em;
+            padding-bottom: 0.222em;
+        }
+
+        /*******END CUSTOM MAIN MENU *******************MAIN MENU*********************************/
+        /* CUSTOM TITLES ***************************TITLES***********************/
+        .mainTitle {
+            font-size: 1.444em;
+            display: flex;
+            justify-content: space-between;
+            padding: 0em 1em 0 1em;
+            text-shadow: -8px -1px 8px blue;
+        }
+
+        /* CUSTOM EXPANDER ***************************EXPANDER***********************/
+        .expanderROW {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #021d33;
+            padding: 0.222em 0em 0.333em 0em;
+            margin: 0 2% 0.333em 2%;
+        }
+
+        .expanderTITLE {
+            font-size: 0.888em;
+            color: steelblue;
+            /* margin-top: 0.333em;     */
+            font-weight: bold;
+        }
+
+        .expanderBTN {
+            color: aqua;
+            background: #000033;
+            border: solid 1px seagreen;
+            width: 1.444em;
+            text-align: center;
+            border-radius: 50%;
+            box-shadow: 1px 1px 1px teal;
+            cursor: pointer;
+            height: 1.444em;
+        }
+
+        .expanderBTN:hover {
+            color: cyan;
+            background: darkblue;
+            border: solid 1px teal;
+        }
+
+        .expanderBTN:active {
+            color: cyan;
+            background: blue;
+            border: solid 1px teal;
+            box-shadow: 1px 1px 1px black;
+        }
+
+        /** END CUSTOM EXPANDER ******************END EXPANDER*********************************************/
+        .chartBTN {
+            background: steelblue;
+            border-radius: 10px;
+            border: 1px solid orangered;
+            padding: 0.666%;
+        }
+
+        .chartBTN:hover {
+            color: aqua;
+            background: black;
+        }
+
+        /**  **************************SELECTOR*************************************/
+        .chartSELECTOR {
+            background: black;
+            color: steelblue;
+            border-radius: 10px;
+            border: 1px solid aqua;
+            padding: 0.333% 0.444em 0.333% 0;
+            font-size: 1em;
+            height: 1.444em;
+            text-align: right;
+        }
+
+        .chartSELECTOR:hover {
+            color: aqua;
+            background: black;
+        }
+
+        .chartSELECTOR:focus {
+            border-color: teal;
+        }
+
+        /* focus border */
+        .chartSELECTOR:focus option:checked {
+            background-color: black;
+            color: limegreen;
+        }
+
+        /* focused item */
+        .chartSELECTOR:focus-visible {
+            outline-color: teal;
+        }
+
+        /* focused item */
+        /* ********************SUBSELECTOR*****************************/
+        .subSELECTOR {
+            background: black;
+            color: steelblue;
+            border-radius: 10px;
+            border: 1px solid aqua;
+            padding: 0.333% 0.444em 0.333%0;
+            font-size: 0.777em;
+            height: 1.444em;
+            text-align: right;
+        }
+
+        .subSELECTOR:hover {
+            color: aqua;
+            background: black;
+        }
+
+        .subSELECTOR:focus {
+            border-color: teal;
+        }
+
+        /* focus border */
+        .subSELECTOR:focus option:checked {
+            background-color: black;
+            color: limegreen;
+        }
+
+        /* focused item */
+        .subSELECTOR:focus-visible {
+            outline-color: teal;
+        }
+
+        /* focused item */
+        /**  *************************END SELECTOR**************************************/
+        /***********************CUSTOM -CHECKBOXES****************/
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 0px solid blue;
+            border-radius: 44%;
+            background-color: black;
+            cursor: pointer;
+            border: 2px solid purple;
+            background-color: #000;
+            color: aqua;
+            margin-left: 2em;
+        }
+
+        input[type="checkbox"]:after {
+            border: 2px solid #0fd05f;
+            border-radius: 3px;
+            background-color: #000;
+            border-radius: 44%;
+            color: aqua;
+            width: 20px;
+            padding: 0 0.111em 0 0.111em;
+            margin: -1px 0 0 -1px;
+        }
+
+        input[type="checkbox"]:checked {
+            content: '\2714';
+            /* Checkmark character */
+            width: 20px;
+            border: 2px solid #0fd05f;
+            border-radius: 44%;
+            background-color: #000;
+            color: aqua;
+        }
+
+        input[type="checkbox"]:checked:after {
+            content: '\2714';
+            /* Checkmark character */
+            width: 20px;
+            background-color: blue;
+            border: 2px solid #0fd05f;
+            border-radius: 44%;
+            background-color: #000;
+            color: aqua;
+        }
+
+        /*****************END CUSTOM -CHECKBOXES*************************/
+        /** CUSTOM TV CHARTS *********************CHARTS******************************************/
+        .tv-lightweight-charts {
+            margin: 1em 0 1em 0;
+            border-radius: 13px;
+        }
+
+        /** END  TV CHARTS *************************CHARTS**************************************/
+        /** API ***************************************************************/
+        #API_BOX {
+            display: flex;
+            border: solid 1px steelblue;
+            border-radius: 13px;
+            padding: 2px 10%;
+            color: #022e64;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 12px auto 1.666em auto;
+            max-width: 30em;
+            min-width: 50%;
+        }
+
+        @media only screen and (max-width: 800px) {
+
+            /************* TABLET */
+            #API_BOX {
+                margin: 8px 10% 1em 10%;
+            }
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            /************* PHONE */
+            #API_BOX {
+                margin: 0 0 1em 0;
+                padding: 0;
+            }
+        }
+
+        #keyBOX {
+            margin: 1%;
+            border: solid 1px steelblue;
+            font-size: 0.777em;
+        }
+
+        #keyINPUT:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #233453 inset;
+        }
+
+        /** END API ***************************************************************/
+        /** VIEW IMPLEMENTATIONS ***************************************************/
+        .tkrROWZ {
+            margin: 1%;
+            width: 92%;
+            border: solid 1px steelblue;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 18px;
+            padding: 0 3% 0 3%;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tkrSubBox {
+            margin: 1%;
+            width: 92%;
+            border: solid 1px steelblue;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 18px;
+            padding: 0 3% 0 3%;
+            align-items: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+        .tkrMenuBox {
+            margin: 1%;
+            width: 95%;
+            border: solid 1px steelblue;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 18px;
+            padding: 0 1% 0 1%;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .tkrSubMenu {
+            display: flex;
+            justify-content: space-around;
+            width: 97%;
+            border: solid 4px #02025f;
+            border-radius: 8px;
+            box-shadow: -1px -1px 8px 0px rebeccapurple;
+            margin: 0 0 1em 0.222em;
+        }
+
+        .tkrTTL {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /** END VIEW IMPLEMENTATIONS *****************************************/
+        .BTNBOX {
+            display: flex;
+            width: 50px;
+            justify-content: space-between;
+        }
+
+        .tkrTXTArea {
+            overflow-x: visible;
+            flex: 1 1 0;
+            resize: horizontal;
+            background: black;
+            color: aqua;
+            padding: 1em;
+            height: 10em;
+        }
+
+        .editorBTN {
+            color: aqua;
+            font-size: 0.666em;
+            padding: 0em 0.4em 0.2em 0.4em;
+            border: solid 1px aqua;
+            box-shadow: inset -2px 0px 1px steelblue;
+            border-radius: 44%;
+            margin-left: 1em;
+            cursor: pointer;
+        }
+
+        .EXPANDER_Item {
+            box-shadow: inset 1px 1px 8px aqua;
+            border-radius: 22px;
+            /* margin: 0.888em 0.444em; */
+            padding: 1em;
+        }
+
+        /* ****************************CUSTOM BUTTONS *************************/
+        .gridBTN {
+            color: steelblue;
+            font-size: 0.666em;
+            padding: 0.222em 0.555em 0.222em 0.555em;
+            border: solid 1px aqua;
+            box-shadow: inset -2px 0px 1px steelblue;
+            border-radius: 44%;
+            margin-left: 0.444em;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 0.888em;
+        }
+
+        .gridBTN:hover {
+            border: 1px solid darkcyan;
+            background: black;
+            color: steelblue
+        }
+
+        .gridBTN:active {
+            border: 1px solid steelblue;
+            background: black;
+            color: purple
+        }
+
+        .DRAW_MODE_SELECTED {
+            border: 2px solid lime;
+        }
+
+        .mainDIVIDER {
+            margin: 1em;
+            box-shadow: 9px 6px 2px aqua;
+        }
+
+        /* ************* CUSTOM MOBILE ***********************/
+        @media only screen and (max-width: 600px) {
+
+            /************* PHONE */
+            body {
+                margin-left: 2px;
+                margin-right: 2px;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+
+            #TEST_VIEW {
+                margin-left: 2px !important;
+                margin-right: 2px !important;
+                padding-left: 2px !important;
+                padding-right: 2px !important;
+                width: 98% !important;
+            }
+
+            .MOBILE_Box_Sizer {
+                /*.BOOKFRAME{*/
+                margin-left: 6px !important;
+                margin-right: 6px !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+            }
+
+            .MOBILE_Frame_Sizer {
+                margin-left: 4px !important;
+                margin-right: 4px !important;
+                padding-left: 4px !important;
+                padding-right: 4px !important;
+            }
+
+            .DisplayCANVAS {
+                margin: 1em !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="scrollBarV">
+    <header style="position:absolute;top:0.555em;align-self:center;display:flex;">
+        AXI_AI<span style="font-size:0.444em">&#8482;</span></header>
+    <menu class="MAIN_MENU">
+        <button id="INFO_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_INFO_VIEW()">INFO</button>
+        <button id="VIZ_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_VIZ_VIEW()">VIZ</button>
+        <button id="TEST_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_TEST_VIEW()">TRAIN</button>
+        <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
+    </menu>
+    <div id="MSG_BOX_FRAME" style="z-index:10;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);
+        padding:0px; display: flex; justify-content: center; width: 77%;">
+
+        <aside id="USER_MSG_BOX" style="z-index:11;margin: 0 14%;display: flex;width:90%; max-width: 28em;
+            border: solid 1px yellow;border-radius: 30px;background: black;justify-content: space-around;
+            position:absolute;display:none">
+            <span style="margin: 1em;border: 1px solid orange;border-radius: 44px;
+                box-shadow: 1px 1px 15px orange;">
+                <span id="MSGIcon1" style="padding:1em;">icon1</span>
+                <span id="MSGTXT" style="padding:1em;">message</span>
+                <span id="MSGIcon2" style="padding:1em;">icon1</span>
+            </span>
+        </aside>
+    </div>
+
+    <!-- <panel id="3D_MATRIX_PANEL" style="position:fixed;top:22%;left:-555px;padding:1em;background:#000033;
+        border: 1px solid aqua;border-radius: 13px;display: flex;
+        flex-direction: column; align-items:center;" class="hidden">
+        <header style="display: flex;width: 100%; align-items: center;
+            justify-content: space-between;">
+            <span style="font-weight: bold; font-size: 1.222em;
+            padding-bottom: 1em; padding-left: 0.333em;"
+            >AI_3D_MATRIX</span>
+            <span id="close3DMatrix_BTN" class="expanderBTN" style="
+                font-size:1.777em;margin-bottom:0.444em;" 
+            onclick="hideShow_3D_Matrix_Click(false);">✦</span>
+        </header>
+    </panel> -->
+
+    <section id="INFO_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px cyan;" />
+
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>INFO</span>
+        </span>
+    </header>
+    <hr />
+    <article id="TKR_RENDER_FRAME"></article>
+    <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+        <!-- <span style="font-size:1em;">INFO:</span><br> -->
+        <div style="font-size:0.888em;" style="display:flex; flex-direction: column;">
+            <h2>👓 OVERVIEW:</h2>
+            This is a remarkable AI NEURAL NETWORK TOOL.<br>
+            <br>
+            <hr><br>
+            <h2>🗺️ HISTORY:</h2>
+            This app was generated as an AI SERIES: from 2022 to 2024.<br>
+            As early adopter enthusiast to learn about AI, while getting Google Badges from Google Developer
+            program. The other pages were: 1) AI WORD GAME,
+            2) AI VOICE and TEXT transcriber, 3) AI_CREATIVE_DEV technical artist (spazefalcon).
+            <br><br>
+            <hr><br>
+            <h2>🏡 SANDBOX STUDY:</h2>
+            This is a SANDBOX study of emergent AI technology:
+            <ol>
+                <li>Anthropic Claude</li>
+                <li>GitHub Copilot</li>
+                <li>OpenAI ChatGPT</li>
+                <li>Google Gemini</li>
+            </ol>
+            <h3>🌳 RESULT:</h3>
+            <i>Google Gemini won.</i>
+            <hr><br>
+
+            <h2>⛰️ PROJECT:</h2>
+            Each module was generated by AI, edited by human (me),
+            in iterative workflow. <br>
+            To SHOW AI progression, over the years.<br>
+            From CNN to RNN to LSTM to GRU to Transformer to BLOOM to GPT to GEMINI.<br>
+            <br>
+            <hr><br>
+            <h2>🔭 GOALS:</h2>
+            <hr>
+            <h1>1)To visualize the "Neural Network" changes in the MATRIX.</h1>
+            <hr>
+            2) With a HEATMAP.<br>That can be <i>played back like a movie</i>.
+            <hr>
+            <br>
+            3) And for the purpose of <b>VISUALIZING "Neural Network" training epochs</b>,
+            with future variations (like
+            mHC).</b> <br>
+            <hr>
+            4) In a 3D WEBGL MATRIX on GPU with three.js (3D embed space).<br>
+            <hr>
+            <h2>🔬METHODOLOGY:</h2>
+            1) Following an AI generated roadmap: <br>
+            <h3>I used AI - to build AI!</h3>
+            2) Asking AI to show me all AI variations - in a similar format.<br>
+            3) Gradually building a "Brain Stem". <br>
+            4) Adding new tools as modules.<br>
+            <br>
+            <hr>
+            <h2>🤯 CONCLUSION:</h2>
+            In this way, AI could show me - <b> how AI evolved, like a movie.</b>💃
+            <hr>
+            This sandbox contains many graduated alterations - that were used in the "TRAIN" tab.
+            <br>And also for uploading audio and video files.
+            <br>🎬 🎥 📹 🎵 🎶 🔊 🎧
+
+            The modules stopped when I built a <b>MUCH BETTER EMBED VISUALIZER</b>
+            called <b>"SUGARCUBE"</b>, with brilliant matrix visualization innovations!
+            <br>
+            <hr>
+            Also I switched to build a Gemini Assistant - which was much more powerful.
+            <br>
+            <hr>
+            So this is just a lonely (but elegant) NEURAL NETWORK sandbox.
+            <br>
+            ❤️ ~ spazefalcon ~ : )
+            <hr>
+
+        </div><br>
+    </aside>
+    <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
+        <button id="addTickBtn1" class="blackBTN" onclick="">add🎇</button>
+        <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
+    </menu>
+    </section><!-- END INFO VIEW-->
+    <section id="VIZ_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
+
+    <article class="mainTitle expanderROW">
+        <span class="boxTitle" style="width:100%;">
+            <span><span style="font-size:0.777em; color:cyan">~</span>
+                VIZ</span>
+        </span>
+    </article>
+    <hr>
+
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_BRAIN_VIZ:</span>
+            <!-- SUB ITEMS require (a) ID on BUTTON for state-->
+            <span id="expander_BRAIN_VIZ" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article id="BRAIN_VIZ_expander" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_BRAIN_VIZ_1" class="DisplayCANVAS" style="background:black;border-radius:13px;
+            border:solid 1px steelblue;width: 88%;
+            margin: 2em;"></canvas>
+        </article>
+    </section>
+
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_TIMELINE:</span>
+            <span id="expander_TIMELINE" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article class="scrollBarH" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_TIMELINE_1" class="DisplayCANVAS" style="background:black;border-radius:13px;
+            border:solid 1px steelblue;
+            margin: 2em;"></canvas>
+        </article>
+    </section>
+
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_PLAYBACK:</span>
+            <span id="expander_PLAYBACK" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <main style="width: 100%; padding:0; margin:0">
+            <article style="display:flex; border-radius:13px;
+                border:solid 1px darkorchid; width:100%; flex-direction: row;">
+                <canvas id="CANVAS_PLAYBACK_1" style="background:black;border-radius:13px;border:solid 1px steelblue;
+                margin: 4%; width:50%;"></canvas>
+                <aside style="width: 50%; display: flex;    flex-direction: column;
+                justify-content: center;
+                align-items: center;">
+                    <button id="playback_BTN_1_" class="blackBTN" style="padding:1em;font-size:0.888em;
+                    line-height: 1.444em;    border-radius: 25px;" ">▶️ PLAY</button>
+                    <footer style=" display:flex; text-align: center;width: 100%; margin-top: 0.444em; justify-content:
+                        center;">
+                        <span id="playback_idx_1_">0</span>&nbsp;of&nbsp;<span id="playback_total_1_">0</span> </footer>
+                </aside>
+            </article>
+        </main>
+    </section>
+
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_3D_MATRIX:</span>
+            <span id="expander_3D_MATRIX" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <main style="width: 100%; padding:0; margin:0">
+
+            <article style="border-radius:13px;
+        border:solid 1px darkorchid; 
+          padding: 2em 2em 1em 2em;justify-content: center;display: flex;flex-direction: column; align-items: center;">
+
+                <div id="3D_MATRIX_1" style="width: 100%; height: 100%; 
+        border:1px solid steelblue; border-radius:13px;"></div>
+
+                <button id="show_3D_Matrix_1_" style="margin-right: 1em; background:#1a001a;cursor:pointer;
+            border-radius:13px;font-size: 1em; padding: 4px; height: 2em; margin-top:1em;
+            color:steelblue;" onclick="hideShow_3D_Matrix_Click(true)">🎱 GENERATE 🎱</button>
+            </article>
+        </main>
+
+
+
+
+        <script type="text/javascript" src="./threeJS_81.js"></script>
+        <script type="text/javascript" src="./scatter3D.js"></script>
+        <script type="text/javascript">
+            // Define a function to initialise the plot:
+            function init_3D_MATRIX() {
+                // The object to hold all the information about the plot:
+                var params = {};
+
+                // Change this to whatever the div is called:
+                params.div_id = "3D_MATRIX_1";
+                //   params.div_id = "CANVAS_3D_MATRIX_1";
+                //   params.div_id = "div_plot_area";
+
+                // An array of objects, one per data point:
+                params.data = [
+                    { "x": 0.49, "y": 60.30, "z": 1.39 },
+                    { "x": 0.20, "y": 42.42, "z": 3.40 },
+                    { "x": 0.35, "y": 43.89, "z": 2.09 },
+                    { "x": 0.19, "y": 84.96, "z": 3.92 },
+                    { "x": 0.30, "y": 77.37, "z": 3.75 },
+                    { "x": 0.41, "y": 21.91, "z": 1.27 },
+                    { "x": 0.02, "y": 72.37, "z": 0.58 },
+                    { "x": 0.68, "y": 69.11, "z": 3.10 },
+                    { "x": 0.19, "y": 0.75, "z": 2.06 },
+                    { "x": 0.87, "y": 56.15, "z": 1.98 },
+                    { "x": 0.84, "y": 68.93, "z": 3.39 },
+                    { "x": 0.07, "y": 33.94, "z": 0.31 },
+                    { "x": 0.40, "y": 13.79, "z": 3.02 },
+                    { "x": 0.51, "y": 50.63, "z": 2.17 },
+                    { "x": 0.48, "y": 37.98, "z": 2.46 },
+                    { "x": 0.61, "y": 14.89, "z": 3.52 },
+                    { "x": 0.03, "y": 82.20, "z": 3.05 },
+                    { "x": 0.81, "y": 72.28, "z": 1.33 },
+                    { "x": 0.63, "y": 54.21, "z": 3.84 },
+                    { "x": 0.99, "y": 93.96, "z": 0.36 }
+                ];
+
+                // Make the plot: THIS IS THE MAIN LOOP FN.
+                //   debugger;
+                three_d.make_scatter(params);
+            }
+
+            // Call the initialisation function:
+            // init_3D_MATRIX();
+        </script>
+
+    </section>
+
+    <hr>
+
+    <section id="VIZ_LOG_FRAME" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_VIZ_LOG:</span>
+            <span id="expander_VIZ_LOG" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+
+        <main style="width: 100%; padding:0; margin:0"></main>
+        <aside style="width:100%; border-radius:13px;
+                    border:solid 1px darkorchid;padding-bottom:2em;">
+            <textarea id="TXT_AI_VIZ_LOG_1" class="scrollBarV" style="font-size:1.666em; width:80%;
+                        margin: 2.222em auto 0.111em auto;    height: 12em;
+                        display:flex;flex:1; background:black;
+                        border-radius: 13px; border: solid 1px steelblue; box-shadow: 1px 1px 11px 0px cyan;
+                        padding: 4% 2% 4% 6%; color: cyan; line-height: 2.444em;" spellcheck="false"> Log out VIZ events...
+                    </textarea>
+        </aside>
+        </main>
+    </section>
+
+
+
+    </article>
+    <hr>
+    <button id="detailsBtn1" class="blackBTN" onclick="">💎 more details?</button>
+    </section><!-- END VIEW -->
+    <!-- *********************************BOOKZ_-VIEW********************************-->
+    <section id="TEST_VIEW" style="border: solid 1px steelblue;justify-content: center; 
+    flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+    padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+    box-shadow:inset 1px 3px 13px 0px steelblue;" />
+
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>AI Training Lab:</span>
+        </span>
+    </header>
+
+
+    <hr>
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 1 (minimal):</span>
+            <span id="expanderBTN1a" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
+        </header>
+        <aside style="margin:1em;">
+            <h3>DESCRIPTION:</h3>
+            Integrated training generation.
+            Graduated training schedule. Training strategy (dynamic).
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN1b" class="expanderBTN" onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+            <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+                TEST TOKEN 'dbl-letter start' and 'contains b':<input id="TXT_INPUT_1_" type="text"
+                    placeholder="query..." style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+                <button id="TEST_BTN_1_" style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;">TEST</button>
+            </section>
+
+            <section id="INPUT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+            </section>
+        </menu>
+        <menu id="OUTPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;max-height:10em;
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUBSECTION-->
+
+    <hr>
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 2 (taxonomy):</span>
+            <span id="expanderBTN2a" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
+        </header>
+        <aside style="margin:1em;">
+            <h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN2b" class="expanderBTN" onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:9em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 4em;padding-left: 1.444em;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+            <section id="INPUT_BOX_2_" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+                TEST TOKEN PRESENCE:<input id="TXT_INPUT_2_" type="text" placeholder="query..." style="margin-left: 1em; background:black;    color: aqua;
+                height: 2em; padding-left: 1em;border-radius: 10px 0px 0px 10px;"></input>
+                <button id="TEST_BTN_2_" style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;">TEST</button>
+                <!-- onclick="queryNeuralNetwork_2_(event);">TES"testBTN_2_"T</button> -->
+            </section>
+
+            <section id="INPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+            </section>
+        </menu>
+        <menu id="OUTPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUB SECTION 2-->
+    <hr>
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 3:</span>
+            <span id="expanderBTN3a" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
+        </header>
+        <aside style="margin:1em;">
+            <h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN3b" class="expanderBTN" onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+            <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+                TEST TOKEN PRESENCE:<input id="txtINPUT_3_" type="text" placeholder="query..." style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+                <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
+                    onclick="queryNeuralNetwork_3_(event);">TEST</button>
+            </section>
+
+            <section id="INPUT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+            </section>
+        </menu>
+        <menu id="OUTPUT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUB SECTION 3-->
+
+
+    </section>
+    <section id="DATA_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px cyan;" />
+
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>DATA</span>
+        </span>
+    </header>
+    <hr />
+    <article id="DATA_RENDER_FRAME"></article>
+    <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+        <span style="font-size:0.888em;">Add text,audio and video files to train AI.</span><br>
+    </aside>
+    <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
+        <button id="addTickBtn1" class="blackBTN" onclick="">add🎇</button>
+        <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
+    </menu>
+    </section><!-- END INFO VIEW-->
+    <script> //*********************MAIN_APP**************************
+        // ******DATES *********************DATES*****************************
+        // const dateTXTStr = document.getElementById('dateTXTStamp');
+        // dateTXTStam.innerHTML = new Date().getFullYear();
+        const isPHONE = window.innerWidth <= 600;
+        const currentDate = new Date();
+        const yearNUM = currentDate.getFullYear();
+        const monthNUM = (currentDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+        const dayNUM = currentDate.getDate().toString();//.padStart(2, '0');
+        const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+        // **** END DATES *****************ENDDATES*********************************
+        const screenHeight = window.innerHeight;
+        // console.log("Screen Height:", screenHeight, "px");
+        // **** END HEIGHT *****************ENDHEIGHT*********************************
+        // **** VIEWS ********************************VIEWS***********************
+        const INFO_VIEW = document.getElementById("INFO_VIEW");
+        const VIZ_VIEW = document.getElementById("VIZ_VIEW");
+        const TEST_VIEW = document.getElementById("TEST_VIEW");
+        const DATA_VIEW = document.getElementById("DATA_VIEW");
+        const INFO_VIEW_BTN = document.getElementById("INFO_VIEW_BTN");
+        const VIZ_VIEW_BTN = document.getElementById("VIZ_VIEW_BTN");
+        const TEST_VIEW_BTN = document.getElementById("TEST_VIEW_BTN");
+        const DATA_VIEW_BTN = document.getElementById("DATA_VIEW_BTN");
+        const GALLERY_VIEW_BTN = document.getElementById("GALLERY_VIEW_BTN");
+        const IMPORT_VIEW_BTN = document.getElementById("IMPORT_VIEW_BTN");
+        const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
+        const DATA_TICKR_FRAME = document.getElementById("DATA_TICKR_FRAME");
+        const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
+        const DATA_MOMZ_FRAME = document.getElementById("DATA_MOMZ_FRAME");
+        const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
+        const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
+        const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
+        const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
+        const render_EDIT_MOMZ_Frame = document.getElementById("render_EDIT_MOMZ_Frame");
+        const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
+        const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
+        INFO_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+        VIZ_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+        TEST_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+        // TEST_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
+        //---- DEFAULT TAB SELECTION
+        VIZ_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
+        VIZ_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
+
+        //---------------------AI_VIEWZ: Local Storage----------------        
+        /************************************************\
+         * - ai_viewz_MATRIX
+         *  - ability to save quarterly NOTES in localstorage
+        \************************************************/
+        let ai_viewz = {
+            expanderBTN1a: true,
+            expanderBTN1b: false,//dynamic...
+        }; //btn id : view state.
+
+        function init_ai_viewz() { //READ from LOCAL STORAGE
+            if (!localStorage.ai_viewz) {//first init
+                localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE
+            }
+            ai_viewz = (localStorage.ai_viewz) ?
+                JSON.parse(localStorage.ai_viewz) : {};
+            // console.log('AI_VIEWZ:',ai_viewz);
+            const allViewKeys = Object.keys(ai_viewz);
+            allViewKeys.forEach((key) => {
+                EXPANDER_Set_OUTERFRAME(key)
+            });
+
+        }; init_ai_viewz();
+        //---- AUTO_LOAD TAB_SELECTION -------------------
+        let main_viewz = {}; //btn id : view state.
+        function init_MAIN_VIEWZ() {
+            if (!localStorage.main_viewz) {//first init
+                localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE
+            }
+            main_viewz = (localStorage.main_viewz) ?
+                JSON.parse(localStorage.main_viewz) : {};
+            // debugger;
+            if (main_viewz['INFO_VIEW_BTN']) { go_INFO_VIEW() }
+            else if (main_viewz['VIZ_VIEW_BTN']) { go_VIZ_VIEW() }
+            else if (main_viewz['TEST_VIEW_BTN']) { go_TEST_VIEW() }
+            else if (main_viewz['DATA_VIEW_BTN']) { go_DATA_VIEW() }
+            else { go_VIZ_VIEW() } //default
+        }; init_MAIN_VIEWZ();
+        // ******************************************VIEW METHODS**********
+        function go_INFO_VIEW() { //TAB SWITCH
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.remove('hiddenTab');
+            INFO_VIEW_BTN.classList.add('selectedMAINBTN');
+            VIZ_VIEW.classList.add('hiddenTab');
+            TEST_VIEW.classList.add('hiddenTab');
+            DATA_VIEW.classList.add('hiddenTab');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = true; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = false; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE
+        }
+        function go_VIZ_VIEW() {
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.add('hiddenTab');
+            VIZ_VIEW.classList.remove('hiddenTab');
+            VIZ_VIEW_BTN.classList.add('selectedMAINBTN');
+            TEST_VIEW.classList.add('hiddenTab');
+            DATA_VIEW.classList.add('hiddenTab');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = true; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = false; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
+        }
+        function go_TEST_VIEW() {
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.add('hiddenTab');
+            VIZ_VIEW.classList.add('hiddenTab');
+            TEST_VIEW.classList.remove('hiddenTab');
+            TEST_VIEW_BTN.classList.add('selectedMAINBTN');
+            DATA_VIEW.classList.add('hiddenTab');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = true; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = false; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
+        }
+        function go_DATA_VIEW() {
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.add('hiddenTab');
+            VIZ_VIEW.classList.add('hiddenTab');
+            TEST_VIEW.classList.add('hiddenTab');
+            DATA_VIEW.classList.remove('hiddenTab');
+            DATA_VIEW_BTN.classList.add('selectedMAINBTN');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = true; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
+        }
+        function remove_VIEW_SELECTED() {
+            INFO_VIEW_BTN.classList.remove('selectedMAINBTN');
+            VIZ_VIEW_BTN.classList.remove('selectedMAINBTN');
+            TEST_VIEW_BTN.classList.remove('selectedMAINBTN');
+            DATA_VIEW_BTN.classList.remove('selectedMAINBTN');
+        }
+
+        //---------------------TOGGLE VIEW BUTTONS---------------------        
+        function EXPANDER_Click_OUTERFRAME(event) {
+            // Get the double parent of the button
+            const parent = event.target.parentElement.parentElement;
+            // const frameID = parent.id;
+            // if(!frameID){console.log('ERROR: couldnt find frame.'); return;}
+            // if(!ai_viewz[frameID]){ console.log('SAVE VIEW');}
+            // Get all siblings after the 0
+            const siblings = Array.from(parent.children);
+            //     .slice(Array.from(parent.children).indexOf(event.target) + 1)
+            //     .filter((_, index) => index !== 0);
+            const siblingSet = siblings.slice(1, siblings.length);//trim top row
+            // Toggle visibility for each following sibling
+            siblingSet.forEach(sibling => {
+                if (sibling.style.display === 'none') {
+                    sibling.style.display = ''; // Show
+                    if (ai_viewz) { ai_viewz[event.target.id] = true; }
+                } else {
+                    sibling.style.display = 'none'; // Hide
+                    if (ai_viewz) { ai_viewz[event.target.id] = false; }
+                }
+            });
+            // debugger;
+            //save state in LOCAL STORAGE
+            localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE 
+        }
+        function EXPANDER_Set_OUTERFRAME(btnid) {
+            if (!ai_viewz || !ai_viewz[btnid] === undefined) {
+                console.log('error: could not find button'); return;
+            }
+            const btnElem = document.getElementById(btnid);
+
+            // Get the double parent of the button
+            const parent = btnElem.parentElement.parentElement;
+
+            // Get all siblings after the 0
+            const siblings = Array.from(parent.children);
+            //     .slice(Array.from(parent.children).indexOf(event.target) + 1)
+            //     .filter((_, index) => index !== 0);
+            const siblingSet = siblings.slice(1, siblings.length);//trim top row
+
+
+            // Toggle visibility for each following sibling
+            siblingSet.forEach(sibling => {
+                // if (sibling.style.display === 'none') {
+                if (ai_viewz[btnid] === true) {
+                    sibling.style.display = ''; // Show
+                } else {
+                    sibling.style.display = 'none'; // Hide
+                }
+            });
+        }
+        //---------------------END EXPANDER TOGGLE VIEW BUTTONS---------------------        
+        function hideShow_3D_Matrix_Click(e) {
+
+            let MATRIX_1 = document.getElementById('3D_MATRIX_1');
+            MATRIX_1.innerHTML = ''; //clear last render
+            init_3D_MATRIX();
+
+            // if(panel.classList.contains('hidden')){ //show panel
+            //     panel.classList.remove('hidden')
+            //     panel.style.display = 'flex';
+            //     panel.style.left = '4%';
+            // }else { //hide panel
+            //     panel.classList.add('hidden')
+            //     panel.style.display = 'none';
+            // }
+        }
+    </script>
+    <!------------MINIMAL EXAMPLE-->
+    <!--script>
+// ************* AI - NEOLOGISM EXPERIMENT ****************
+// MINIMAL Neural Network example, for wordcrafting study.
+//   - generated by Claude, revised by Gemini.
+//   - trains an NN then AFFIRMS presence in nn.
+//------------------------------------------------------
+//                        AI-TEMPLATE
+//------------------------------------------------------
+//----------------------UI-VARIABLES--------------
+const NNTXT_1_ELEM = document.getElementById("NNTXT_1_ELEM");
+const INPUT_1_ELEM = document.getElementById("INPUT_1_ELEM");
+const OUTPUT_1_ELEM = document.getElementById("OUTPUT_1_ELEM");
+//-----------------------------------------------
+class NeuralNetwork_1 {
+    constructor(inputSize, hiddenSize, outputSize) {
+        // Initialize weights with random values between -1 and 1
+        this.weightsIH = Array(inputSize).fill().map(() => 
+            Array(hiddenSize).fill().map(() => Math.random() * 2 - 1)
+        );
+        this.weightsHO = Array(hiddenSize).fill().map(() => 
+            Array(outputSize).fill().map(() => Math.random() * 2 - 1)
+        );
+        
+        // Initialize biases
+        this.biasH = Array(hiddenSize).fill().map(() => Math.random() * 2 - 1);
+        this.biasO = Array(outputSize).fill().map(() => Math.random() * 2 - 1);
+        
+        this.learningRate = 0.1;
+    }
+
+    // Sigmoid activation function
+    sigmoid(x) {
+        return 1 / (1 + Math.exp(-x));
+    }
+
+    // Convert letter sequence to input vector
+    // Each position represents presence (1) or absence (0) of a letter
+    tokenToInput(token) {
+        const input = Array(26 * 2).fill(0); // Space for 2 letters
+        for (let i = 0; i < Math.min(token.length, 2); i++) {
+            const charCode = token.charCodeAt(i) - 97; // 'a' starts at 97
+            if (charCode >= 0 && charCode < 26) {
+                input[i * 26 + charCode] = 1;
+            }
+        }
+        return input;
+    }
+
+    // Forward pass through the network
+    forward(input) {  // Hidden layer
+        this.hidden = this.weightsIH[0].map((_, j) => {
+            let sum = this.biasH[j];
+            for (let i = 0; i < input.length; i++) {
+                sum += input[i] * this.weightsIH[i][j];
+            }
+            return this.sigmoid(sum); //activation fn
+        });
+
+        // Output layer
+        this.output = this.weightsHO[0].map((_, j) => {
+            let sum = this.biasO[j];
+            for (let i = 0; i < this.hidden.length; i++) {
+                sum += this.hidden[i] * this.weightsHO[i][j];
+            }
+            return this.sigmoid(sum); //activation fn
+        });
+
+        return this.output;
+    }
+
+    // Train the network using backpropagation
+    train(input, target) {
+        // Forward pass
+        this.forward(input);
+
+        // Output layer error
+        const outputErrors = target.map((t, i) => (t - this.output[i]));
+        
+        // Hidden layer error
+        const hiddenErrors = this.hidden.map((_, i) => {
+            let error = 0;
+            for (let j = 0; j < outputErrors.length; j++) {
+                error += outputErrors[j] * this.weightsHO[i][j];
+            }
+            return error;
+        });
+
+        // Update weights and biases
+        // Output layer
+        for (let i = 0; i < this.hidden.length; i++) {
+            for (let j = 0; j < this.output.length; j++) {
+                this.weightsHO[i][j] += this.learningRate * outputErrors[j] * 
+                    this.output[j] * (1 - this.output[j]) * this.hidden[i];
+            }
+        }
+
+        // Hidden layer
+        for (let i = 0; i < input.length; i++) {
+            for (let j = 0; j < this.hidden.length; j++) {
+                this.weightsIH[i][j] += this.learningRate * hiddenErrors[j] * 
+                    this.hidden[j] * (1 - this.hidden[j]) * input[i];
+            }
+        }
+
+        // Update biases
+        for (let i = 0; i < this.biasO.length; i++) {
+            this.biasO[i] += this.learningRate * outputErrors[i] * 
+                this.output[i] * (1 - this.output[i]);
+        }
+        for (let i = 0; i < this.biasH.length; i++) {
+            this.biasH[i] += this.learningRate * hiddenErrors[i] * 
+                this.hidden[i] * (1 - this.hidden[i]);
+        }
+    }
+} //END NEURAL NETWORK class
+function queryNeuralNetwork_1(e){
+    const txtINPUT = document.getElementById('txtINPUT')
+    const val = txtINPUT.value;
+    if(!val){console.log('needs input'); return;}
+    tokens = val.split(' ')
+    OUTPUT_1_ELEM.innerHTML = ''; //clear out put
+    tokens.forEach(token => {
+        const input = nn_1.tokenToInput(token);
+        const output = nn_1.forward(input);
+        console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
+        // debugger;
+        const txtPCTS = output.map( (v) => { 
+            // return v.toFixed(3); 
+            return v.toFixed(2)*100;
+            // let decimal = v.toFixed(2)*100;
+            // return decimal.toFixed(0)+'%'; //human readable %
+        });
+        // const txtPCTS = txtTOKENS.split(',')
+        if(txtPCTS[0]<txtPCTS[1]){//YES
+            OUTPUT_1_ELEM.innerHTML += `${token} || NO: ${txtPCTS[1]} || yes: ${txtPCTS[0]}<br>`;
+        } else { //NO
+            OUTPUT_1_ELEM.innerHTML += `${token} || YES: ${txtPCTS[0]} || no: ${txtPCTS[1]}<br>`;
+        }
+        // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
+    });
+}
+
+// Example usage:
+let tokens = ["aa", "ab", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
+// debugger;
+const nn_1 = new NeuralNetwork_1(52, 10, 2); // 52 inputs (26 letters * 2 positions), 10 hidden neurons, 2 outputs
+
+NNTXT_1_ELEM.innerHTML = tokens; //set tokens in UI.
+// INPUT_1_ELEM.innerHTML = tokens; //set tokens in UI.
+
+// Training example
+function trainExample() {
+    // Example: Train to recognize if a token contains double letters
+    tokens.forEach(token => {
+        const input = nn_1.tokenToInput(token);
+        const target = [
+            token[0] === token[1] ? 1 : 0,  // First output: has double letters
+            token.includes('b') ? 1 : 0      // Second output: contains 'a'
+        ];
+        nn_1.train(input, target);
+    });
+}
+
+// Train the network
+// debugger;
+let epoch_num = 1000;
+for (let i = 0; i < epoch_num; i++) {
+// for (let i = 0; i < 1000; i++) {
+// for (let i = 0; i < 10; i++) {
+    trainExample();
+}
+
+OUTPUT_1_ELEM.innerHTML = ''; //clear out put
+// Test the network //optimize this TODO: move vars out to runFN() pattern.
+tokens.forEach(token => {
+    const input = nn_1.tokenToInput(token);
+    const output = nn_1.forward(input);
+    console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
+    // debugger;
+    const txtPCTS = output.map( (v) => { 
+        // return v.toFixed(3); 
+        return v.toFixed(2)*100;
+        // let decimal = v.toFixed(2)*100;
+        // return decimal.toFixed(0)+'%'; //human readable %
+    });
+    // const txtPCTS = txtTOKENS.split(',')
+    if(txtPCTS[0]<txtPCTS[1]){//YES
+        OUTPUT_1_ELEM.innerHTML += `${token} || YES: ${txtPCTS[1]} || No: ${txtPCTS[0]}<br>`;
+    } else { //NO
+        OUTPUT_1_ELEM.innerHTML += `${token} || no: ${txtPCTS[0]} || Yes: ${txtPCTS[1]}<br>`;
+    }
+    // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
+});
+</script--><!----------------END MINIMAL EXAMPLE-->
+    <!-- <script src="./script_minimal_1.js"></script> -->
+    <!-- <script src="./script_minimal_2.js" type="module"></script> -->
+    <!-- <script src="./script_ai_TIMELINE_1.js" type="module"></script> -->
+    <!-- <script src="./script_similar_word_cosine_1.js"></script> -->
+    <!-- <script src="./script_viz_1.js"></script> -->
+    <!-- <script src="./script_LSTM_2.js"></script> -->
+    <!-- <script src="./script_LSTM_1.js"></script> -->
+    <!-- <script src="./script_relu_1.js"></script> -->
+    <!-- <script src="./module_ai_BRAIN_VIZ_2.js" type="module"></script> -->
+    <!-- <script src="./script_txt_a_upper_1.js"  type="module"></script> -->
+    <!-- <script src="./script_AI_BRAIN_STEM_2.js"  type="module"></script> -->
+    <!-- <script src="./script_AI_BRAIN_STEM_3.js"  type="module"></script> -->
+    <script src="./module_ai_BRAIN_STEM_4.js" type="module"></script>
+    <!-- <script src="./script_letter_predictor_1.js"></script> -->
+    <!-- <script src="./script_neologism_1.js"></script> -->
+    <!-- <script src="./script_cluster_1.js"></script> -->
+
+    <!--***************************** END XMPL CHART MODULES******************-->
+    <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
+background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
+        <div style="margin-top:0;margin-bottom:0em;">
+            2020 - <span id="dateTXTStamp"></span>
+            <script>
+                const dateTXTStamp = document.getElementById('dateTXTStamp');
+                dateTXTStamp.innerHTML = new Date().getFullYear();</script> AXI_AI&#8482; by © NetCinematics llc.
+            MIT License.
+            DESCRIPTION: Template for AI NEURAL NETWORK educational purposes.
+        </div>
+    </legal>
+    <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Points Plot</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script> -->
+    <script>
+        // Initialize scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Add orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Create grid helper
+        const gridHelper = new THREE.GridHelper(20, 20);
+        scene.add(gridHelper);
+
+        // Data points
+        const points = [
+            { x: 0, y: 10, z: 0, txt: 'up' },
+            { x: 0, y: -10, z: 0, txt: 'down' },
+            { x: 0, y: 0, z: 10, txt: 'north' },
+            { x: 10, y: 0, z: 0, txt: 'east' },
+            { x: 0, y: 0, z: -10, txt: 'south' },
+            { x: -10, y: 0, z: 0, txt: 'west' }
+        ];
+
+        // Sphere geometry and material
+        const sphereGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+
+        // Add points and labels
+        points.forEach(point => {
+            // Create sphere
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.position.set(point.x, point.y, point.z);
+            scene.add(sphere);
+
+            // Create text sprite
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 256;
+            context.font = 'Bold 40px Arial';
+            context.fillStyle = 'white';
+            context.textAlign = 'center';
+            context.fillText(point.txt, 128, 128);
+
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.set(point.x, point.y + 1, point.z);
+            sprite.scale.set(4, 2, 1);
+            scene.add(sprite);
+        });
+
+        // Position camera
+        camera.position.set(15, 15, 15);
+        camera.lookAt(0, 0, 0);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js Various Geometries</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    // Setup scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Create materials
+    const basicMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+    const phongMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff, shininess: 100 });
+
+    // Create geometries
+    const geometries = [
+        new THREE.BoxGeometry(),
+        new THREE.SphereGeometry(),
+        new THREE.DodecahedronGeometry(),
+        new THREE.ConeGeometry(),
+        new THREE.TorusGeometry(),
+        new THREE.TetrahedronGeometry(),
+        new THREE.CylinderGeometry()
+    ];
+
+    const materials = [basicMaterial, lambertMaterial, phongMaterial];
+
+    // Create and position shapes
+    geometries.forEach((geometry, index) => {
+        let material = materials[2]
+        // const material = materials[index % materials.length];
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = (index - (geometries.length / 2)) * 3;
+        scene.add(mesh);
+    });
+
+    // Setup lighting
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+    pointLight.position.set(10, 10, 10);
+    scene.add(pointLight);
+
+    // Set camera position
+    camera.position.z = 10;
+
+    // Render loop
+    function animate() {
+        requestAnimationFrame(animate);
+        scene.children.forEach(mesh => {
+            mesh.rotation.x += 0.01;
+            mesh.rotation.y += 0.01;
+        });
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+</body>
+</html>

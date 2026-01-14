@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Points Plot</title>
+    <style>
+        body { 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #canvas-container { 
+            flex: 1;
+        }
+        #info-panel {
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="info-panel">Click on a sphere to see its label</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script> -->
+    <script>
+        // Initialize scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Add orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Create grid helper
+        const gridHelper = new THREE.GridHelper(20, 20);
+        scene.add(gridHelper);
+
+        // Data points with colors
+        const points = [
+            { x: 0, y: 10, z: 0, txt: 'up', color: 0xFFFFFF },      // white
+            { x: 0, y: -10, z: 0, txt: 'down', color: 0x000000 },   // black
+            { x: 0, y: 0, z: 10, txt: 'north', color: 0x0000FF },   // blue
+            { x: 10, y: 0, z: 0, txt: 'east', color: 0x800080 },    // purple
+            { x: 0, y: 0, z: -10, txt: 'south', color: 0xFF0000 },  // red
+            { x: -10, y: 0, z: 0, txt: 'west', color: 0x00FF00 }    // green
+        ];
+
+        // Sphere geometry and materials
+        const sphereGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+        const spheres = new Map(); // Store sphere references for raycasting
+
+        // Raycaster for click detection
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // Add points and labels
+        points.forEach(point => {
+            // Create sphere with specific color
+            const sphereMaterial = new THREE.MeshBasicMaterial({ color: point.color });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.position.set(point.x, point.y, point.z);
+            scene.add(sphere);
+            spheres.set(sphere.id, point); // Store reference for click handling
+
+            // Create text sprite
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 256;
+            context.font = 'Bold 40px Arial';
+            context.fillStyle = 'white';
+            context.textAlign = 'center';
+            context.fillText(point.txt, 128, 128);
+
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.set(point.x, point.y + 1, point.z);
+            sprite.scale.set(4, 2, 1);
+            scene.add(sprite);
+        });
+
+        // Position camera
+        camera.position.set(15, 15, 15);
+        camera.lookAt(0, 0, 0);
+
+        // Click handler
+        function onClick(event) {
+            // Calculate mouse position in normalized device coordinates
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Update the picking ray with the camera and mouse position
+            raycaster.setFromCamera(mouse, camera);
+
+            // Calculate objects intersecting the picking ray
+            const intersects = raycaster.intersectObjects(scene.children);
+
+            if (intersects.length > 0) {
+                const clickedSphere = intersects[0].object;
+                const pointData = spheres.get(clickedSphere.id);
+                if (pointData) {
+                    document.getElementById('info-panel').textContent = 
+                        `Clicked point: ${pointData.txt} (position: x=${pointData.x}, y=${pointData.y}, z=${pointData.z})`;
+                }
+            }
+        }
+
+        renderer.domElement.addEventListener('click', onClick, false);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
+</body>
+</html>
