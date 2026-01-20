@@ -62,10 +62,11 @@ export function initBrainViz() {
     }
     addDiagonalLines();
 
-    function add_aSPHEREZa_1() {
+    function add_ORBZ_1() {
+        const points_NUM_1 = 10;//20;
         const points = [
-            { x: 10, y: 10, z: 10 }, { x: -10, y: 10, z: 10 }, { x: -10, y: -10, z: 10 }, { x: -10, y: -10, z: -10 },
-            { x: 10, y: 10, z: -10 }, { x: 10, y: -10, z: -10 }, { x: -10, y: 10, z: -10 }, { x: 10, y: -10, z: 10 }
+            { x: points_NUM_1, y: points_NUM_1, z: points_NUM_1 }, { x: -points_NUM_1, y: points_NUM_1, z: points_NUM_1 }, { x: -points_NUM_1, y: -points_NUM_1, z: points_NUM_1 }, { x: -points_NUM_1, y: -points_NUM_1, z: -points_NUM_1 },
+            { x: points_NUM_1, y: points_NUM_1, z: -points_NUM_1 }, { x: points_NUM_1, y: -points_NUM_1, z: -points_NUM_1 }, { x: -points_NUM_1, y: points_NUM_1, z: -points_NUM_1 }, { x: points_NUM_1, y: -points_NUM_1, z: points_NUM_1 }
         ];
 
         let sphereGeometry = new THREE.SphereGeometry(1.222, 32, 32);
@@ -81,7 +82,7 @@ export function initBrainViz() {
             scene.add(sphere);
         }
 
-        //init - aSPHEREZa
+        //init - ORBZ
         let aMIN = -10; let aMAX = 10;
         sphereGeometry = new THREE.SphereGeometry(0.111, 32, 32);
         sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00FFFF, transparent: true, opacity: 0.222 });
@@ -95,7 +96,7 @@ export function initBrainViz() {
             }
         }
     }
-    add_aSPHEREZa_1();
+    add_ORBZ_1();
 
     function addTesseract_1() {
         const geometry = new THREE.BoxGeometry(2, 2, 2);
@@ -104,9 +105,10 @@ export function initBrainViz() {
         scene.add(box);
         const materialLine = new THREE.LineBasicMaterial({ color: 0x00FFFF, transparent: true, opacity: 0.1 });
 
+        const points_NUM_2 = 20;//10;
         const points = [
-            { x: 10, y: 10, z: 10 }, { x: -10, y: 10, z: 10 }, { x: -10, y: -10, z: 10 }, { x: -10, y: -10, z: -10 },
-            { x: 10, y: 10, z: -10 }, { x: 10, y: -10, z: -10 }, { x: -10, y: 10, z: -10 }, { x: 10, y: -10, z: 10 }
+            { x: points_NUM_2, y: points_NUM_2, z: points_NUM_2 }, { x: -points_NUM_2, y: points_NUM_2, z: points_NUM_2 }, { x: -points_NUM_2, y: -points_NUM_2, z: points_NUM_2 }, { x: -points_NUM_2, y: -points_NUM_2, z: -points_NUM_2 },
+            { x: points_NUM_2, y: points_NUM_2, z: -points_NUM_2 }, { x: points_NUM_2, y: -points_NUM_2, z: -points_NUM_2 }, { x: -points_NUM_2, y: points_NUM_2, z: -points_NUM_2 }, { x: points_NUM_2, y: -points_NUM_2, z: points_NUM_2 }
         ];
 
         for (let i = 0; i < points.length; i++) {
