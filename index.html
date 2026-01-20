@@ -22,7 +22,8 @@
         }
     </script>
     <script type="module">
-        import { initBrainViz } from './BRAIN_VIZ_CANVAS.js';
+        // import { initBrainViz } from './BRAIN_VIZ_CANVAS_1.js';
+        import { initBrainViz } from './BRAIN_VIZ_CANVAS_2.js';
         window.addEventListener('load', () => {
             initBrainViz();
         });
@@ -895,9 +896,9 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
             border:solid 1px darkorchid; 
             display:flex !important;
             justify-content: center;">
-            <canvas id="CANVAS_BRAIN_VIZ_1" class="DisplayCANVAS" style="background:black;border-radius:13px;
+            <!-- <canvas id="CANVAS_BRAIN_VIZ_1" class="DisplayCANVAS" style="background:black;border-radius:13px;
             border:solid 1px steelblue;width: 88%;
-            margin: 2em;"></canvas>
+            margin: 2em;"></canvas> -->
         </article>
     </section>
 
@@ -965,11 +966,6 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
             </article>
         </main>
 
-
-
-
-        <!-- <script type="text/javascript" src="./threeJS_81.js"></script> -->
-        <!-- <script type="text/javascript" src="./scatter3D.js"></script> -->
         <script type="text/javascript">
             // Define a function to initialise the plot:
             function init_3D_MATRIX() {
@@ -978,8 +974,6 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
 
                 // Change this to whatever the div is called:
                 params.div_id = "3D_MATRIX_1";
-                //   params.div_id = "CANVAS_3D_MATRIX_1";
-                //   params.div_id = "div_plot_area";
 
                 // An array of objects, one per data point:
                 params.data = [
@@ -1004,13 +998,11 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
                     { "x": 0.63, "y": 54.21, "z": 3.84 },
                     { "x": 0.99, "y": 93.96, "z": 0.36 }
                 ];
-
                 // Make the plot: THIS IS THE MAIN LOOP FN.
-                //   debugger;
                 three_d.make_scatter(params);
             }
 
-            // Call the initialisation function:
+            // Call the initialisation function (moved to runFN() pattern):
             // init_3D_MATRIX();
         </script>
 
@@ -1492,7 +1484,6 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
                     if (ai_viewz) { ai_viewz[event.target.id] = false; }
                 }
             });
-            // debugger;
             //save state in LOCAL STORAGE
             localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE 
         }
@@ -1528,18 +1519,10 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
             let MATRIX_1 = document.getElementById('3D_MATRIX_1');
             MATRIX_1.innerHTML = ''; //clear last render
             init_3D_MATRIX();
-
-            // if(panel.classList.contains('hidden')){ //show panel
-            //     panel.classList.remove('hidden')
-            //     panel.style.display = 'flex';
-            //     panel.style.left = '4%';
-            // }else { //hide panel
-            //     panel.classList.add('hidden')
-            //     panel.style.display = 'none';
-            // }
         }
     </script>
-    <!------------MINIMAL EXAMPLE-->
+    <!------------MINIMAL EXAMPLE: 
+     - to understand history of AI algorithm evolution-->
     <!--script>
 // ************* AI - NEOLOGISM EXPERIMENT ****************
 // MINIMAL Neural Network example, for wordcrafting study.
@@ -1732,8 +1715,10 @@ tokens.forEach(token => {
         OUTPUT_1_ELEM.innerHTML += `${token} || no: ${txtPCTS[0]} || Yes: ${txtPCTS[1]}<br>`;
     }
     // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
+    //END AI training ALGORITHM evolution study.
 });
-</script--><!----------------END MINIMAL EXAMPLE-->
+</script-->
+    <!----------------AI VIBE HISTORY: AI builds AI-->
     <!-- <script src="./script_minimal_1.js"></script> -->
     <!-- <script src="./script_minimal_2.js" type="module"></script> -->
     <!-- <script src="./script_ai_TIMELINE_1.js" type="module"></script> -->
