@@ -25,7 +25,9 @@
         // import { initBrainViz } from './BRAIN_VIZ_CANVAS_1.js';  //Full 20x20x20 sugarcube
         // import { initBrainViz } from './BRAIN_VIZ_CANVAS_2.js'; //MIN 4x4x4x8 sugarcube
         // import { initBrainViz } from './BRAIN_VIZ_CANVAS_3.js'; //MID: STRATZA_1 sugarcube
-        import { initBrainViz } from './BRAIN_VIZ_CANVAS_4.js'; //MID: STRATZA_1 sugarcube
+        // import { initBrainViz } from './BRAIN_VIZ_CANVAS_4.js'; //MID: SINGULAR SELECTION MECHANISM.
+        // import { initBrainViz } from './BRAIN_VIZ_CANVAS_5.js'; // DASHBOARD: Multi SELECTION MECHANISM.
+        import { initBrainViz } from './BRAIN_VIZ_CANVAS_6.js'; // DASHBOARD: Multi SELECTION MECHANISM.
         window.addEventListener('load', () => {
             initBrainViz();
         });
@@ -890,6 +892,59 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
         </div>
     </article>
 
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_DASHBOARD:</span>
+            <!-- SUB ITEMS require (a) ID on BUTTON for state-->
+            <span id="expander_BRAIN_VIZ" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article id="DASHBOARD_expander" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <div
+                style="display: flex; flex-flow: row wrap; justify-content: center; align-items: center; gap: 2em; padding: 1.222em; width: 100%;">
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="MULTI_SELECT_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="window.MULTI_SELECT = this.checked;">
+                    MULTI_SELECT
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="NET_SELECT_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="window.NET_SELECT = this.checked;">
+                    NET_SELECT
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: magenta; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SHOW_CORE_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('CORE', this.checked);">
+                    SHOW_CORE
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: #39FF14; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SHOW_MID_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('MID', this.checked);">
+                    SHOW_MID
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: #7DF9FF; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SHOW_AERO_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('AERO', this.checked);">
+                    SHOW_AERO
+                </label>
+            </div>
+
+        </article>
+    </section>
     <hr>
     <section class="EXPANDER_Item MOBILE_Box_Sizer">
         <header class="mainTitle expanderROW">
