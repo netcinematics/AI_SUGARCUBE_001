@@ -31,12 +31,13 @@ export function initBrainViz() {
     // add_default_Plane();
 
     //--------**** WORD_SETZ  **** ----------------------
-    let ORBZ_3_XLLM_25 = [
-        "AMETASTATEA", "AMETZASTATZA", "AXI", "aXTRaTELLEXa", "aMAXaCLARIa",
-        "aVASTaVISTa", "aMETASPAZEA", "aEDIFIZa", "aFABRIXa", "aSYNERGENZa",
-        "aENaFLUENZa", "aVIGORa", "aENERGENZa", "aREGENERa", "aCONFLEXa",
-        "aCONFLUENZa", "aCOMPLEXagon", "aWAYZaOUTZa", "NEED_NOT_BE", "aTRANZaSENDZa",
-        "aEMERGENTZa", "aSPARKZa", "aREMEDYaMALADYa", "aMENTZaMATRIXa", "aEXAMINZaEXISTZa"
+    let ORBZ_3_XLLM_32 = [
+        "AMETASTATEA", "aVIEWZa", "AXI", "aXTRaTELLEXa", "aMAXaCLARIa",
+        "aVASTaVISTa", "aMETASPAZEa", "aEDIFIZa", "aFABRIXa", "aSYNERGENZa",
+        "aENaFLUENTZa", "aVIGORa", "aENERGENZa", "aREGENERa", "aCONFLEXa",
+        "aCONFLUENTZa", "aCOMPLEXagon", "aWAYZaOUTZa", "NEED_NOT_BE", "aTRANZaSENDZa",
+        "aEMERGENTZa", "aSPARKZa", "aREMEDYaMALADYa", "aMENTZaMATRIXa", "aEXAMINZaEXISTZa",
+        "aLUMENZa", "aLUMENTZa", "aSEEKYa", "aENa", "aDISa", "aVOIDZa",
     ];
 
     let ORBZ_2_LLM_40 = [
@@ -50,20 +51,20 @@ export function initBrainViz() {
         "aMETASTATEa", "aECHOZa", "aPARADOXa", "aPRISTINEa", "aMECHANIZMa"
     ];
 
-    let ORBZ_1_SLM_60 = [
-        "aWORDZa", "aACTZa", "aVIEWZa", "aCONCEPTZa", "aCHOOZa",
-        "aFACTZa", "aENa", "aDISa", "aSPARKa", "aSPARKZa",
-        "aCOGZa", "aSYMBOLIXa", "aTHORNZa", "aLUMENZa", "aMINDzEYEa",
-        "aQOMa", "aTELLECTa", "aMENTZa", "aXTRa", "aFOCOa",
-        "aSEEKa", "aQUERIOa", "aCURIOa", "ACTUeality", "aSYMBIOZa",
-        "aSYNTHESIZMa", "aSEEKaBeyondza", "aREFLECTZeality", "aENeality", "aXTRaTELLECTa",
-        "aHUMANZa", "aFOGZa", "aPRYZMa", "ALPHA", "BITZ",
-        "MINDz", "EYEa", "GEARZa", "GOGZa", "LOOPZa",
-        "FLOWZa", "PATHZa", "DAWNZa", "DUSKZa", "SAND",
-        "DIRT", "ROCK", "CLOUD", "BLOXYa", "KNOTZa",
-        "TWIZTa", "BRAMBLE", "CLIFZa", "LAVA", "HEAT",
-        "FIRE", "SMOKE", "NOIZE", "SHOUTZ", "aDARKa"
-    ];
+    // let ORBZ_1_SLM_60 = [
+    //     "aWORDZa", "aACTZa", "aVIEWZa", "aCONCEPTZa", "aCHOOZa",
+    //     "aFACTZa", "aENa", "aDISa", "aSPARKa", "aSPARKZa",
+    //     "aCOGZa", "aSYMBOLIXa", "aTHORNZa", "aLUMENZa", "aMINDzEYEa",
+    //     "aQOMa", "aTELLECTa", "aMENTZa", "aXTRa", "aFOCOa",
+    //     "aSEEKa", "aQUERIOa", "aCURIOa", "ACTUeality", "aSYMBIOZa",
+    //     "aSYNTHESIZMa", "aSEEKaBeyondza", "aREFLECTZeality", "aENeality", "aXTRaTELLECTa",
+    //     "aHUMANZa", "aFOGZa", "aPRYZMa", "ALPHA", "BITZ",
+    //     "MINDz", "EYEa", "GEARZa", "GOGZa", "LOOPZa",
+    //     "FLOWZa", "PATHZa", "DAWNZa", "DUSKZa", "SAND",
+    //     "DIRT", "ROCK", "CLOUD", "BLOXYa", "KNOTZa",
+    //     "TWIZTa", "BRAMBLE", "CLIFZa", "LAVA", "HEAT",
+    //     "FIRE", "SMOKE", "NOIZE", "SHOUTZ", "aDARKa"
+    // ];
 
     let ORBZ_0_SLM_64 = [
         "aWORDZa", "aACTZa", "aVIEWZa", "aCONCEPTZa", "aCHOOZa",
@@ -81,7 +82,7 @@ export function initBrainViz() {
         "AAA", "BBB", "CCC", "DDD"
     ];
 
-    let all_ORBZ = [...ORBZ_3_XLLM_25, ...ORBZ_2_LLM_40, ...ORBZ_0_SLM_64];
+    let all_ORBZ = [...ORBZ_3_XLLM_32, ...ORBZ_2_LLM_40, ...ORBZ_0_SLM_64];
     let orbIndex = 0;
 
     // --- Interaction State ---
@@ -179,26 +180,25 @@ export function initBrainViz() {
             }
         }
     }
-    add_SUB_CUBE_3({ XDIM: 4, YDIM: 4, ZDIM: 4, color: 0x00FFFF });
 
     // function add_ORBZ_1() {
     // add_Sugar_ORBZ_1(-3, 3);  //MIN and MAX values for the ORBZ.
     // add_Sugar_ORBZ_2(4, 4, 4);  //MIN and MAX values for the ORBZ.
     // }
     // add_ORBZ_1();
-    function add_SUB_CUBES_1() {
-        add_SUB_CUBE_3({ XDIM: 4, YDIM: 4, ZDIM: 4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
-        add_SUB_CUBE_3({ XDIM: -4, YDIM: -4, ZDIM: -4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
-        add_SUB_CUBE_3({ XDIM: 4, YDIM: 4, ZDIM: -4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
-        add_SUB_CUBE_3({ XDIM: 4, YDIM: -4, ZDIM: -4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
+    // function add_SUB_CUBES_1() {
+    //     add_SUB_CUBE_3({ XDIM: 4, YDIM: 4, ZDIM: 4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
+    //     add_SUB_CUBE_3({ XDIM: -4, YDIM: -4, ZDIM: -4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
+    //     add_SUB_CUBE_3({ XDIM: 4, YDIM: 4, ZDIM: -4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
+    //     add_SUB_CUBE_3({ XDIM: 4, YDIM: -4, ZDIM: -4, color: 0x00FFFF });  //MIN and MAX values for the ORBZ.
 
-        add_SUB_CUBE_3({ XDIM: 4, YDIM: -4, ZDIM: 4, color: 0x00FFFF });
-        add_SUB_CUBE_3({ XDIM: -4, YDIM: 4, ZDIM: 4, color: 0x00FFFF });
-        add_SUB_CUBE_3({ XDIM: -4, YDIM: 4, ZDIM: -4, color: 0x00FFFF });
-        add_SUB_CUBE_3({ XDIM: -4, YDIM: -4, ZDIM: 4, color: 0x00FFFF });
-        // add_Sphere_Anchors();
-    }
-    add_SUB_CUBES_1();
+    //     add_SUB_CUBE_3({ XDIM: 4, YDIM: -4, ZDIM: 4, color: 0x00FFFF });
+    //     add_SUB_CUBE_3({ XDIM: -4, YDIM: 4, ZDIM: 4, color: 0x00FFFF });
+    //     add_SUB_CUBE_3({ XDIM: -4, YDIM: 4, ZDIM: -4, color: 0x00FFFF });
+    //     add_SUB_CUBE_3({ XDIM: -4, YDIM: -4, ZDIM: 4, color: 0x00FFFF });
+    //     // add_Sphere_Anchors();
+    // }
+    // add_SUB_CUBES_1();
 
     // function add_SUB_CUBES_2() {
 
@@ -216,6 +216,92 @@ export function initBrainViz() {
     //     // add_Sphere_Anchors();
     // }
     // add_SUB_CUBES_2();
+
+    /**
+     * aMENTZaMATRIXa: SugarCube 512 Population Algorithm
+     * Logic: Core (AXI) -> Mid (Logic) -> Shell (HUI)
+     */
+    function getSeedFromIndex(strata, index) {
+        if (strata === "CORE") return ORBZ_3_XLLM_32[index % ORBZ_3_XLLM_32.length];
+        if (strata === "MID") return ORBZ_2_LLM_40[index % ORBZ_2_LLM_40.length];
+        return ORBZ_0_SLM_64[index % ORBZ_0_SLM_64.length];
+    }
+
+    function generateSugarCube512() {
+        const size = 8; // 8x8x8 = 512 ORBZ
+        const center = (size - 1) / 2; // 3.5
+        const orbs = [];
+
+        for (let x = 0; x < size; x++) {
+            for (let y = 0; y < size; y++) {
+                for (let z = 0; z < size; z++) {
+                    // Calculate distance from center to determine Strata
+                    const dist = Math.sqrt(
+                        Math.pow(x - center, 2) +
+                        Math.pow(y - center, 2) +
+                        Math.pow(z - center, 2)
+                    );
+
+                    let strata, word;
+
+                    // 1. CORE_ORBZ (The Mission Core) - Radius < 1.8
+                    if (dist < 1.8) {
+                        strata = "CORE";
+                        word = getSeedFromIndex("CORE", orbs.length);
+                    }
+                    // 2. MID_ORBZ (The Logic/Refraction Mantle) - 1.8 <= Radius < 3.8
+                    else if (dist < 3.8) {
+                        strata = "MID";
+                        word = getSeedFromIndex("MID", orbs.length);
+                    }
+                    // 3. SHELL_ORBZ (The HUI/Vocabulary Shell) - Radius >= 3.8
+                    else {
+                        strata = "SHELL";
+                        word = getSeedFromIndex("SHELL", orbs.length);
+                    }
+
+                    orbs.push({
+                        pos: { x: (x - center) * 2, y: (y - center) * 2, z: (z - center) * 2 },
+                        word: word,
+                        strata: strata,
+                        aMETZa: {
+                            vertex: `v_${x}_${y}_${z}`,
+                            aFLECTZa: strata === "MID" ? "REFRACT" : "REFLECT",
+                            aSPARKaPotential: strata === "CORE" ? 1.0 : 0.5
+                        }
+                    });
+                }
+            }
+        }
+        return orbs;
+    }
+
+    function add_ORBZ_512() {
+        const orbsData = generateSugarCube512();
+        const sphereGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+
+        orbsData.forEach(data => {
+            // let color = 0x00FFFF; // Default Cyan for MID
+            let color = 0x39FF14; // Neon Green for MID
+            if (data.strata === "CORE") color = 0xFF00FF; // CORE
+            if (data.strata === "SHELL") color = 0x7DF9FF; // SHELL (Electric Blue / Whiter Neon)
+
+            const material = new THREE.MeshBasicMaterial({
+                color: color,
+                transparent: true,
+                opacity: data.strata === "CORE" ? 0.8 : 0.4
+            });
+
+            const sphere = new THREE.Mesh(sphereGeometry, material);
+            sphere.position.set(data.pos.x, data.pos.y, data.pos.z);
+            sphere.userData = { word: data.word, strata: data.strata, aMETZa: data.aMETZa };
+
+            scene.add(sphere);
+            spheres.set(sphere.id, { txt: data.word, ...data.pos });
+        });
+    }
+
+    add_ORBZ_512();
 
 
     function add_Tesseract_1() {
@@ -260,7 +346,7 @@ export function initBrainViz() {
             }
         }
     }
-    add_Tesseract_1();
+    // add_Tesseract_1();
 
     function add_Anchor_Boxes() {
         const xcubeSize = 1;
@@ -280,7 +366,7 @@ export function initBrainViz() {
     }
     // add_Anchor_Boxes();
 
-    const points = [
+    const txt_points = [
         { x: 0, y: 10, z: 0, txt: 'up', color: 0xFFFF00 },
         { x: 0, y: -10, z: 0, txt: 'down', color: 0xFFA500 },
         { x: 0, y: 0, z: 10, txt: 'north', color: 0x0000FF },
@@ -289,7 +375,7 @@ export function initBrainViz() {
         { x: -10, y: 0, z: 0, txt: 'west', color: 0x00FF00 }
     ];
 
-    function createIntermediateSpheres(start, end, color, count = 6) {
+    function createCenterSpike(start, end, color, count = 6) {
         for (let i = 1; i < count + 1; i++) {
             const t = i / (count + 1);
             const x = start.x + (end.x - start.x) * t;
@@ -312,14 +398,14 @@ export function initBrainViz() {
         const sphereGeometry = new THREE.SphereGeometry(0.3, 32, 32);
         // Using global spheres, raycaster, mouse
 
-        points.forEach(point => {
+        txt_points.forEach(point => {
             const sphereMaterial = new THREE.MeshBasicMaterial({ color: point.color });
             const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
             sphere.position.set(point.x, point.y, point.z);
             scene.add(sphere);
             spheres.set(sphere.id, point);
 
-            createIntermediateSpheres(
+            createCenterSpike(
                 { x: 0, y: 0, z: 0 },
                 { x: point.x, y: point.y, z: point.z },
                 point.color
@@ -332,7 +418,7 @@ export function initBrainViz() {
             context.font = '44px Impact';
             context.fillStyle = 'aqua';
             context.textAlign = 'center';
-            // context.fillText(point.txt, 128, 128); //hide labels.
+            // context.fillText(point.txt, 128, 128); //DIRECTIONAL TEXT N,E,S,W,U,D.
 
             const texture = new THREE.Texture(canvas);
             texture.needsUpdate = true;
@@ -381,67 +467,32 @@ export function initBrainViz() {
     // }
     // add_Manifold_1();
 
-    function add_default_Plane() {
-        const geometry1 = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(1, 1, 1),
-            new THREE.Vector3(1, -1, 1),
-            new THREE.Vector3(-1, -1, -1),
-        ]);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0xFF0000, transparent: true, opacity: 0.5, side: THREE.DoubleSide
-        });
-        const plane = new THREE.Mesh(geometry1, material);
-        scene.add(plane);
+    // function add_default_Plane() {
+    //     const geometry1 = new THREE.BufferGeometry().setFromPoints([
+    //         new THREE.Vector3(1, 1, 1),
+    //         new THREE.Vector3(1, -1, 1),
+    //         new THREE.Vector3(-1, -1, -1),
+    //     ]);
+    //     const material = new THREE.MeshBasicMaterial({
+    //         color: 0xFF0000, transparent: true, opacity: 0.5, side: THREE.DoubleSide
+    //     });
+    //     const plane = new THREE.Mesh(geometry1, material);
+    //     scene.add(plane);
 
-        const geometry2 = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-1, 1, 1),
-            new THREE.Vector3(-1, -1, 1),
-            new THREE.Vector3(1, -1, -1),
-        ]);
-        const material2 = new THREE.MeshBasicMaterial({
-            color: 0x0000FF, transparent: true, opacity: 0.5, side: THREE.DoubleSide
-        });
-        const plane2 = new THREE.Mesh(geometry2, material2);
-        scene.add(plane2);
-        console.log("add_default_Plane added red triangle");
-    }
-    add_default_Plane();
-
-
-    // function add_default_Stratify() {
-    //     //all_ORBZ = [...ORBZ_3_XLLM_25, ...ORBZ_2_LLM_40, ...ORBZ_0_SLM_64];
-    //     all_ORBZ = ORBZ_3_XLLM_25;
-    //     const total = all_ORBZ.length;
-    //     const layerSize = Math.ceil(total / 3);
-
-    //     all_ORBZ.forEach((word, i) => {
-    //         let color = 0xFF0000; // RED
-    //         if (i >= layerSize && i < 2 * layerSize) color = 0x00FF00; // GREEN
-    //         else if (i >= 2 * layerSize) color = 0x0000FF; // BLUE
-
-    //         // const sphereGeometry = new THREE.SphereGeometry(0.25
-    //     }
-    //     );
+    //     const geometry2 = new THREE.BufferGeometry().setFromPoints([
+    //         new THREE.Vector3(-1, 1, 1),
+    //         new THREE.Vector3(-1, -1, 1),
+    //         new THREE.Vector3(1, -1, -1),
+    //     ]);
+    //     const material2 = new THREE.MeshBasicMaterial({
+    //         color: 0x0000FF, transparent: true, opacity: 0.5, side: THREE.DoubleSide
+    //     });
+    //     const plane2 = new THREE.Mesh(geometry2, material2);
+    //     scene.add(plane2);
+    //     console.log("add_default_Plane added red triangle");
     // }
+    // add_default_Plane();
 
-    // add_default_Stratify()
-
-    // function add_default_Stratify() {
-    //     //all_ORBZ = [...ORBZ_3_XLLM_25, ...ORBZ_2_LLM_40, ...ORBZ_0_SLM_64];
-    //     all_ORBZ = ORBZ_3_XLLM_25;
-    //     const total = all_ORBZ.length;
-    //     const layerSize = Math.ceil(total / 3);
-
-    //     all_ORBZ.forEach((word, i) => {
-    //         let color = 0xFF0000; // RED
-    //         if (i >= layerSize && i < 2 * layerSize) color = 0x00FF00; // GREEN
-    //         else if (i >= 2 * layerSize) color = 0x0000FF; // BLUE
-
-    //         // const sphereGeometry = new THREE.SphereGeometry(0.25
-    //     }
-    //     );
-    // }
-    // add_default_Stratify()
 
     // **** --- INITIALIZE SUGARCUBE VIZUALIZATION ---- **** //
     camera.position.set(15, 15, -15);
