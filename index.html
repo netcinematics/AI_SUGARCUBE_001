@@ -904,22 +904,8 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
             border:solid 1px darkorchid; 
             display:flex !important;
             justify-content: center;">
-            <div
+            <header
                 style="display: flex; flex-flow: row wrap; justify-content: center; align-items: center; gap: 2em; padding: 1.222em; width: 100%;">
-                <label
-                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
-                    <input type="checkbox" id="MULTI_SELECT_CHK"
-                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
-                        onchange="window.MULTI_SELECT = this.checked;">
-                    MULTI_SELECT
-                </label>
-                <label
-                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
-                    <input type="checkbox" id="NET_SELECT_CHK"
-                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
-                        onchange="window.NET_SELECT = this.checked;">
-                    NET_SELECT
-                </label>
                 <label
                     style="display: flex; align-items: center; cursor: pointer; color: magenta; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
                     <input type="checkbox" id="SHOW_CORE_CHK"
@@ -941,8 +927,28 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
                         onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('AERO', this.checked);">
                     SHOW_AERO
                 </label>
-            </div>
-
+            </header>
+            <div id="DASHBOARD_textarea" style="padding: 4em; width: 88%; max-width: 100%; height: 444px; 
+                border: 1px solid steelblue; border-radius: 22px; margin: 0px auto; 
+                background: black; color: steelblue; display: block; 
+                box-sizing: border-box; overflow: auto; white-space: pre-wrap; font-family: monospace;"></div>
+            <footer
+                style="display: flex; flex-flow: row wrap; justify-content: center; align-items: center; gap: 2em; padding: 1.222em; width: 100%;">
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="MULTI_SELECT_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="window.MULTI_SELECT = this.checked;">
+                    MULTI_SELECT
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="NET_SELECT_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="window.NET_SELECT = this.checked;">
+                    NET_SELECT
+                </label>
+            </footer>
         </article>
     </section>
     <hr>
