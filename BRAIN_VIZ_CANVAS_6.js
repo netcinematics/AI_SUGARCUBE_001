@@ -544,119 +544,144 @@ export function initBrainViz() {
         if (intersects.length > 0) {
             const clickedSphere = intersects[0].object;
             const pointData = spheres.get(clickedSphere.id);
+
             if (pointData) {
                 console.log(`Clicked point: ${pointData.txt} (position: x=${pointData.x}, y=${pointData.y}, z=${pointData.z})`);
 
-                if (intersects.length > 0) {
-                    const clickedSphere = intersects[0].object;
-                    const pointData = spheres.get(clickedSphere.id);
-                    if (pointData) {
-                        console.log(`Clicked point: ${pointData.txt} (position: x=${pointData.x}, y=${pointData.y}, z=${pointData.z})`);
+                const isSelected = selectedOrbs.has(clickedSphere.id);
 
-                        const isSelected = selectedOrbs.has(clickedSphere.id);
-
-                        if (isSelected) {
-                            // Always allow toggling OFF individually
-                            deselect_ORB_SYSTEM(clickedSphere.id);
-                        } else {
-                            // If NOT already selected:
-                            if (!window.MULTI_SELECT) {
-                                // If Multi-Select is OFF, clear everything else first
-                                deselect_ORB_SYSTEM(); // No ID means clear all
-                            }
-                            // Select the new one
-                            select_ORB_SYSTEM1(clickedSphere, { primary_selection: true, secondary_selection: false, tertiary_selection: false });
-                        }
+                if (isSelected) {
+                    // Always allow toggling OFF individually
+                    deselect_ORB_SYSTEM(clickedSphere.id);
+                } else {
+                    // If NOT already selected:
+                    if (!window.MULTI_SELECT) {
+                        // If Multi-Select is OFF, clear everything else first
+                        deselect_ORB_SYSTEM(); // No ID means clear all
                     }
+                    // Select the new one
+                    select_ORB_SYSTEM1(clickedSphere, { primary_selection: true, secondary_selection: false, tertiary_selection: false });
                 }
-            }
-
-            function select_ORB_SYSTEM1(sphere, params) {
-                console.log("select_ORB_SYSTEM1 called with:", params);
-                if (sphere && !selectedOrbs.has(sphere.id)) {
-                    sphere.material.color.setHex(0x96DED1); // Bird Egg Blue
-                    sphere.material.opacity = 1.0;
-                    sphere.scale.set(2.0, 2.0, 2.0); // Scale up radius
-
-                    // Add Glow
-                    const map = getGlowTexture();
-                    const material = new THREE.SpriteMaterial({ map: map, color: 0x96DED1, transparent: true, blending: THREE.AdditiveBlending });
-                    const sprite = new THREE.Sprite(material);
-                    sprite.scale.set(0.6, 0.6, 1.0);
-                    sprite.position.copy(sphere.position);
-                    scene.add(sprite);
-
-                    // Track selection
-                    selectedOrbs.set(sphere.id, { sprite: sprite });
-                }
-            }
-
-            function deselect_ORB_SYSTEM(targetId = null) {
-                console.log("deselect_ORB_SYSTEM called, target:", targetId);
-
-                const idsToDeselect = targetId ? [targetId] : Array.from(selectedOrbs.keys());
-
-                idsToDeselect.forEach(id => {
-                    const sphere = scene.getObjectById(id);
-                    const data = spheres.get(id);
-                    const selectionData = selectedOrbs.get(id);
-
-                    // Restore Orb Visuals
-                    if (sphere && data) {
-                        // Remove from tracking
-                        selectedOrbs.delete(id);
-
-                        // 1. Restore Defaults First
-                        if (data.originalColor !== undefined) sphere.material.color.setHex(data.originalColor);
-                        if (data.originalOpacity !== undefined) sphere.material.opacity = data.originalOpacity;
-                        if (data.originalScale !== undefined) sphere.scale.copy(data.originalScale);
-
-                        if (selectionData && selectionData.sprite) {
-                            scene.remove(selectionData.sprite);
-                        }
-
-                        // 2. Check if Stratum is Active (and re-apply Visuals if so)
-                        if (window.activeStrata && window.activeStrata[data.strata]) {
-                            // Re-apply Strata Styles (Logic duplicated from toggleStrataGlow logic for consistency)
-                            // Ideally this should be a shared helper, but inline for now to ensure update.
-
-                            // Visual Specs
-                            let scaleVal = 1.0;
-                            let opacityVal = 0.5;
-                            if (data.strata === "CORE") { scaleVal = 6.0; opacityVal = 0.9; }
-                            else if (data.strata === "MID") { scaleVal = 3.5; opacityVal = 0.6; }
-                            else if (data.strata === "AERO") { scaleVal = 1.5; opacityVal = 0.5; }
-
-                            sphere.scale.set(scaleVal, scaleVal, scaleVal);
-                            sphere.material.opacity = opacityVal;
-
-                            if (!sphere.userData.glowSprite) {
-                                const map = getGlowTexture();
-                                const material = new THREE.SpriteMaterial({
-                                    map: map,
-                                    color: sphere.material.color,
-                                    transparent: true,
-                                    blending: THREE.AdditiveBlending
-                                });
-                                const sprite = new THREE.Sprite(material);
-                                sprite.scale.set(1.5, 1.5, 1.0);
-                                sprite.position.copy(sphere.position);
-                                scene.add(sprite);
-                                sphere.userData.glowSprite = sprite;
-                            }
-                        } else {
-                            // Ensure glow is gone if not active
-                            if (sphere.userData.glowSprite) {
-                                scene.remove(sphere.userData.glowSprite);
-                                sphere.userData.glowSprite = null;
-                            }
-                        }
-                    }
-                });
             }
         }
     }
     renderer.domElement.addEventListener('click', onClick, false);
+
+    function updateDashboardFromSelection() {
+        const dashboard = document.getElementById('DASHBOARD_textarea');
+        if (!dashboard) return;
+
+        if (selectedOrbs.size === 0) {
+            dashboard.innerText = "";
+            return;
+        }
+
+        let displayText = "";
+        let index = 1;
+        selectedOrbs.forEach((value, id) => {
+            const sphere = scene.getObjectById(id);
+            if (sphere) {
+                const txt = sphere.userData.word || "N/A";
+                const strata = sphere.userData.strata || "N/A";
+                const pos = sphere.position;
+
+                displayText += `[${index}] SELECTED ORB: ${txt} (${strata})\n`;
+                displayText += `    POS: (${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)})\n`;
+                displayText += `----------------------------------------\n`;
+                index++;
+            }
+        });
+        dashboard.innerText = displayText;
+    }
+
+    function select_ORB_SYSTEM1(sphere, params) {
+        console.log("select_ORB_SYSTEM1 called with:", params);
+        if (sphere && !selectedOrbs.has(sphere.id)) {
+            sphere.material.color.setHex(0x96DED1); // Bird Egg Blue
+            sphere.material.opacity = 1.0;
+            sphere.scale.set(2.0, 2.0, 2.0); // Scale up radius
+
+            // Add Glow
+            const map = getGlowTexture();
+            const material = new THREE.SpriteMaterial({ map: map, color: 0x96DED1, transparent: true, blending: THREE.AdditiveBlending });
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(0.6, 0.6, 1.0);
+            sprite.position.copy(sphere.position);
+            scene.add(sprite);
+
+            // Track selection
+            selectedOrbs.set(sphere.id, { sprite: sprite });
+
+            // Update Dashboard
+            updateDashboardFromSelection();
+        }
+    }
+
+    function deselect_ORB_SYSTEM(targetId = null) {
+        console.log("deselect_ORB_SYSTEM called, target:", targetId);
+
+        const idsToDeselect = targetId ? [targetId] : Array.from(selectedOrbs.keys());
+
+        idsToDeselect.forEach(id => {
+            const sphere = scene.getObjectById(id);
+            const data = spheres.get(id);
+            const selectionData = selectedOrbs.get(id);
+
+            // Restore Orb Visuals
+            if (sphere && data) {
+                // Remove from tracking
+                selectedOrbs.delete(id);
+
+                // 1. Restore Defaults First
+                if (data.originalColor !== undefined) sphere.material.color.setHex(data.originalColor);
+                if (data.originalOpacity !== undefined) sphere.material.opacity = data.originalOpacity;
+                if (data.originalScale !== undefined) sphere.scale.copy(data.originalScale);
+
+                if (selectionData && selectionData.sprite) {
+                    scene.remove(selectionData.sprite);
+                }
+
+                // 2. Check if Stratum is Active (and re-apply Visuals if so)
+                if (window.activeStrata && window.activeStrata[data.strata]) {
+                    // Re-apply Strata Styles (Logic duplicated from toggleStrataGlow logic for consistency)
+
+                    // Visual Specs
+                    let scaleVal = 1.0;
+                    let opacityVal = 0.5;
+                    if (data.strata === "CORE") { scaleVal = 0.5; opacityVal = 0.9; }
+                    else if (data.strata === "MID") { scaleVal = 2.5; opacityVal = 0.6; }
+                    else if (data.strata === "AERO") { scaleVal = 1.5; opacityVal = 0.5; }
+
+                    sphere.scale.set(scaleVal, scaleVal, scaleVal);
+                    sphere.material.opacity = opacityVal;
+
+                    if (!sphere.userData.glowSprite) {
+                        const map = getGlowTexture();
+                        const material = new THREE.SpriteMaterial({
+                            map: map,
+                            color: sphere.material.color,
+                            transparent: true,
+                            blending: THREE.AdditiveBlending
+                        });
+                        const sprite = new THREE.Sprite(material);
+                        sprite.scale.set(1.5, 1.5, 1.0);
+                        sprite.position.copy(sphere.position);
+                        scene.add(sprite);
+                        sphere.userData.glowSprite = sprite;
+                    }
+                } else {
+                    // Ensure glow is gone if not active
+                    if (sphere.userData.glowSprite) {
+                        scene.remove(sphere.userData.glowSprite);
+                        sphere.userData.glowSprite = null;
+                    }
+                }
+            }
+        });
+
+        // Update Dashboard
+        updateDashboardFromSelection();
+    }
 
     function onMouseMove(event) {
         event.preventDefault();
