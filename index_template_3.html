@@ -27,8 +27,7 @@
         // import { initBrainViz } from './BRAIN_VIZ_CANVAS_3.js'; //MID: STRATZA_1 sugarcube
         // import { initBrainViz } from './BRAIN_VIZ_CANVAS_4.js'; //MID: SINGULAR SELECTION MECHANISM.
         // import { initBrainViz } from './BRAIN_VIZ_CANVAS_5.js'; // DASHBOARD: Multi SELECTION MECHANISM.
-        // import { initBrainViz } from './BRAIN_VIZ_CANVAS_6.js'; // DASHBOARD: Multi SELECTION MECHANISM.
-        import { initBrainViz } from './BRAIN_CANVAS_1.js'; // DASHBOARD: Multi SELECTION MECHANISM.
+        import { initBrainViz } from './BRAIN_VIZ_CANVAS_6.js'; // DASHBOARD: Multi SELECTION MECHANISM.
         window.addEventListener('load', () => {
             initBrainViz();
         });
@@ -38,6 +37,7 @@
         // let _default_TRADE_DATA_MAP_Monthly = default_TRADE_DATA_MAP_Monthly
         // let _default_MOMZ_DATA_MAP = default_MOMZ_DATA_MAP
     </script> <!-- **************************END-CUSTOM-DATA-MODULE******************-->
+    <!-- <script type="text/javascript" src="./module/lwc_dev_deriv_4.2.js"></script> -->
     <style>
         body {
             background: black;
@@ -101,6 +101,8 @@
         }
 
         /* BTN **********************************BTN**************************/
+        /* .BTN{background:grey;border-radius: 8px;border:solid 1px darkslateblue;font-size:0.888em;
+        cursor:pointer;color:cyan;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;} */
         .blackBTN {
             border-radius: 13px;
             background: black;
@@ -113,6 +115,8 @@
         }
 
         /**************RESPONSIVE BTN *******************/
+        /* .BTN:hover{border:1px solid steelblue; color:purple}
+    .BTN:active{border:1px solid lime; color:green} */
         .blackBTN:hover {
             border: 2px solid lime;
             background: black;
@@ -193,6 +197,7 @@
         .scrollBarH::-webkit-scrollbar-thumb {
             background-color: #04223c;
             border-radius: 13px;
+            /* background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 26%, transparent 26%, transparent 51%, rgba(255, 255, 255, -0.4) 51%, rgba(255, 255, 255, 0.6) 74%, transparent 74%, transparent); */
         }
 
         .txtSizer::-webkit-scrollbar {
@@ -200,6 +205,10 @@
             background: black;
         }
 
+        /* option:active {
+        background-color: darkslateblue;
+        color: aqua;
+    }  */
         /*******CUSTOM MAIN MENU *******************MAIN MENU*********************************/
         .MAIN_MENU {
             background: rgb(72, 80, 111);
@@ -398,6 +407,7 @@
             outline-color: teal;
         }
 
+        /* focused item */
         /**  *************************END SELECTOR**************************************/
         /***********************CUSTOM -CHECKBOXES****************/
         input[type="checkbox"] {
@@ -689,6 +699,20 @@
         </aside>
     </div>
 
+    <!-- <panel id="3D_MATRIX_PANEL" style="position:fixed;top:22%;left:-555px;padding:1em;background:#000033;
+        border: 1px solid aqua;border-radius: 13px;display: flex;
+        flex-direction: column; align-items:center;" class="hidden">
+        <header style="display: flex;width: 100%; align-items: center;
+            justify-content: space-between;">
+            <span style="font-weight: bold; font-size: 1.222em;
+            padding-bottom: 1em; padding-left: 0.333em;"
+            >AI_3D_MATRIX</span>
+            <span id="close3DMatrix_BTN" class="expanderBTN" style="
+                font-size:1.777em;margin-bottom:0.444em;" 
+            onclick="hideShow_3D_Matrix_Click(false);">✦</span>
+        </header>
+    </panel> -->
+
     <section id="INFO_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
 flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
 padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
@@ -743,11 +767,9 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
                 <li>VISUALIZE AI MANIFOLD.</li>
                 <li>DATA IN HIGHER DIMENSIONS, with dynamic legend.</li>
                 <li>Variable Vector Spectrums.</li>
-                <li>In fixed position (optimization for t-SNE/PCA)</li>
+                <li>In fixed position (optimized: t-SNE/PCA)</li>
                 <li>AI AGENTS undestand the vectors and <i>fill in the blanks!</i></li>
                 <li>Humans in the loop (HITL), conduct brain_viz surgery.</li>
-                <li>Training from AI Agent_as_Judge.</li>
-                <li>With Google Gemini ADK.</li>
             </ol>
             <br>
             <hr><br>
@@ -805,8 +827,6 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
                 </li>
             </ul>
 
-            <br>
-            It went way beyond this. Using AI to code GEN.
             <br>
             <hr>
             <br>
@@ -1396,7 +1416,7 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
         //---------------------AI_VIEWZ: Local Storage----------------        
         /************************************************\
          * - ai_viewz_MATRIX
-         *  - ability to save CONTEXT MEMORY in localstorage
+         *  - ability to save quarterly NOTES in localstorage
         \************************************************/
         // let ai_viewz = {
         //     expanderBTN1a: true,
@@ -1430,8 +1450,6 @@ box-shadow: inset 1px 1px 11px 0px cyan;" />
             });
 
         }; init_ai_viewz();
-        //-------------------------------------END LOCAL STORAGE fns
-
         //---- AUTO_LOAD TAB_SELECTION -------------------
         let main_viewz = {}; //btn id : view state.
         function init_MAIN_VIEWZ() {
