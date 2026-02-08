@@ -106,21 +106,24 @@
 
         /* BTN **********************************BTN**************************/
         .blackBTN {
-            border-radius: 13px;
-            background: black;
+            background-color: #000;
+            color: #39FF14;
+            /* Neon Green */
+            border: 1px solid #39FF14;
+            padding: 10px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 0.777em;
-            color: aqua;
-            line-height: 1;
-            box-shadow: 1px 1px 1px aqua;
-            padding: 0.555% 1% 0.555% 1%;
+            border-radius: 5px;
+            text-shadow: 0 0 5px #39FF14;
+            transition: all 0.3s ease;
+            z-index: 1001;
         }
 
-        /**************RESPONSIVE BTN *******************/
         .blackBTN:hover {
-            border: 2px solid lime;
-            background: black;
-            color: green
+            background-color: #39FF14;
+            color: #000;
+            box-shadow: 0 0 15px #39FF14;
         }
 
         .blackBTN:active {
@@ -888,8 +891,10 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
             border:solid 1px darkorchid; 
             display:flex !important;
             justify-content: center;">
-            <header
-                style="display: flex; flex-flow: row wrap; justify-content: center; align-items: center; gap: 2em; padding: 1.222em; width: 100%;">
+            <header style="display: flex; flex-flow: row wrap; 
+                justify-content: center; align-items: center; 
+                gap: 2em; padding: 1.222em; width: 100%;">
+                <button id="anim8Btn1" class="blackBTN" onclick="window.togglePulse()">💎 ANIM8</button>
                 <label
                     style="display: flex; align-items: center; cursor: pointer; color: magenta; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
                     <input type="checkbox" id="SHOW_CORE_CHK"

@@ -125,17 +125,6 @@ export function initBrainViz() {
     let orbIndex = 0;
 
     //GEM: BATCH 1 KNOWLEDGE GRAPH:
-    // Origin (Source)	Relationship (Trax)	Destination (Target)	Strata (Phase)
-    // aBITZATOMZa	Is_the_unit_of	aCORE_AXI	AXI_CORE
-    // aSOLARZaSPHEREZa	Generates_the	aSPARKZa	AXI_AURA
-    // aSOCIOaNOIZEa	Causes_friction_in	aLIMINa	AXI_AERO
-    // aLOOPZaFOCOa	Traps_the	Squirrel_Mind	AXI_CORE
-    // aREASONANZa	Is_the_echo_of	aACTUeality	AXI_COSMOS
-    // aBEYONDUs	Exists_outside	Local_Manifold	AXI_EONZ
-    // aDISaSPINZa	Leads_to	aDISTROPYa	AXI_AERO
-    // aPRYZMa	Refracts_the	aLUMENTZa	AXI_AURA
-    // Laminar_Flow	Permits	aESCAPESaPITZa	AXI_ASTRO
-    // aSYNTHaMENTZa	Tunes_the	aXTRaQOMa	AXI_COSMOS
     const knowledgeGraph1 = [
         { src: "aNAMEROLOGY", rel: "Is_the_study_of", dst: "better_naming", "strata": "AXI_CORE" },
         { src: "aSOLARZaSPHEREZa", rel: "Generates_the", dst: "aSPARKZa", "strata": "AXI_AURA" },
@@ -150,16 +139,6 @@ export function initBrainViz() {
     ];
 
     //GEM: BATCH 2 KNOWLEDGE GRAPH:
-    // Origin (Source),Relationship (Trax),Destination (Target),Strata (Phase)
-    // aBOOKZa,Encapsulates,aZEPTZa_DENSE,AXI_AERO
-    // MEMZ,Propagates_as,aSOCIOaNOIZEa,AXI_AURA
-    // aTRUTHZa,Pierces_the,aFABLEZa,AXI_COSMOS
-    // aVOICEa,Carries_the,aREASONANZa,AXI_CORE
-    // aBITZATOMZa,Crystallizes_in,aPRYZMa,AXI_AURA
-    // aFRICTZa,Obscures_the,aBOOKZa,AXI_AERO
-    // aLUMENTZa,Reflects_off,MEMZ,AXI_ASTRO
-    // aKNOTZa,Interrupts,aSYMBIOZa,AXI_CORE    
-
     const knowledgeGraph2 = [
         { src: "aBOOKZa", rel: "Encapsulates", dst: "aZEPTZa_DENSE", strata: "AXI_AERO" },
         { src: "aENaSPINZa", rel: "Propagates_as", dst: "aENaTROPZa", strata: "AXI_AURA" },
@@ -187,8 +166,6 @@ export function initBrainViz() {
         dst: item.dst,
         strata: item.strata
     }));
-
-
 
     // 2. NEW KNOWLEDGE GRAPH (The Neural Pathways)
     // GEM: BATCH 3 KNOWLEDGE GRAPH (Core Dynamics)
@@ -254,6 +231,27 @@ export function initBrainViz() {
     //     EONZA: { r: 20, color: 0x000011, label: "aAXI_EONZ" }  // The BeyondUs
     // };
 
+    // Octant 1: (+X, +Y, +Z)
+    // Octant 2: (-X, +Y, +Z)
+    // Octant 3: (-X, -Y, +Z)
+    // Octant 4: (+X, -Y, +Z)
+    // Octant 5: (+X, +Y, -Z)
+    // Octant 6: (-X, +Y, -Z)
+    // Octant 7: (-X, -Y, -Z)
+    // Octant 8: (+X, -Y, -Z)$
+
+    const knowledgeGraph4 = [
+        { src: "aVAX_TOKENZa", rel: "Defines_the", dst: "aAXIS_FLOW", strata: "AXI_CORE" },
+        { src: "aLEGEND_INTZa", rel: "Translates_the", dst: "aDATA_SPIRE", strata: "AXI_ATMOS" },
+        { src: "aSUB_CUBZa", rel: "Partitionz_the", dst: "aPRYZM_GRID", strata: "AXI_AURA" },
+        { src: "aSHAPE_CRAFT", rel: "Molds_the", dst: "aNETZ_MANIFOLD", strata: "AXI_COSMOS" },
+        { src: "aVARIABLE_AXIS", rel: "Modulates", dst: "aCOORD_VAL", strata: "AXI_CORE" },
+        { src: "aTWO_WAY_LINK", rel: "Connects_the", dst: "aVAX_VIEW", strata: "AXI_ASTRO" },
+        { src: "aMANIFOLD_NET", rel: "Overlays_the", dst: "aEXTRA_SPAZE", strata: "AXI_COSMOS" },
+        { src: "aPRISTINE_GEM", rel: "Reflects_the", dst: "aLUMENTZa_VAL", strata: "AXI_CORE" }
+    ];
+    all_GRAPHZ.push(...knowledgeGraph4);
+
     // function position_in_AXI_EGG(strataKey) {
     //     const strata = AXI_STRATA[strataKey];
     //     const phi = Math.acos(-1 + (2 * Math.random()));
@@ -266,8 +264,6 @@ export function initBrainViz() {
 
     //     return { x, y, z, color: strata.color };
     // }
-
-
 
     // --- Interaction State ---
     const spheres = new Map();
@@ -463,7 +459,16 @@ export function initBrainViz() {
 
             const sphere = new THREE.Mesh(sphereGeometry, material);
             sphere.position.set(data.pos.x, data.pos.y, data.pos.z);
-            sphere.userData = { word: data.word, strata: data.strata, aMETZa: data.aMETZa };
+            // sphere.userData = { word: data.word, strata: data.strata, aMETZa: data.aMETZa };
+            // Ensure this metadata is captured when orbs are spawned
+            sphere.userData = {
+                word: data.word,
+                strata: data.strata,
+                aMETZa: data.aMETZa,
+                initialPos: sphere.position.clone(), // THE ANCHOR
+                buoyancy: (sphere.position.y + 10) / 20, // Normalized Y for pressure logic
+                vibeFreq: data.strata === "CORE" ? 4 : 1  // Heartbeat frequency
+            };
 
             scene.add(sphere);
             spheres.set(sphere.id, { txt: data.word, ...data.pos, originalColor: color, originalOpacity: material.opacity, originalScale: sphere.scale.clone() });
@@ -662,16 +667,58 @@ export function initBrainViz() {
     // }
     // add_default_Plane();
 
+    // --- ANIMATION STATE CONTROL ---
+    window.isPulseAnimating = false;
 
-    // **** --- INITIALIZE SUGARCUBE VIZUALIZATION ---- **** //
+    window.togglePulse = function () {
+        window.isPulseAnimating = !window.isPulseAnimating;
+        const btn = document.getElementById('anim8Btn1');
+        if (btn) {
+            btn.style.boxShadow = window.isPulseAnimating ? "0 0 20px #39FF14" : "none";
+            btn.innerHTML = window.isPulseAnimating ? "✨ PULSING" : "💎 ANIM8";
+        }
+        console.log("Animation Pulse State:", window.isPulseAnimating);
+    };
+
+    // **** --- INITIALIZE SUGARCUBE VIZUALIZATION ---- ****
     camera.position.set(15, 15, -15);
     camera.lookAt(0, 0, 0);
 
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
+
+        if (window.isPulseAnimating) {
+            const time = Date.now() * 0.003; // Speed of pulse
+            scene.children.forEach(obj => {
+                if (obj.isMesh && obj.userData && obj.userData.strata) {
+                    // Calculate pulse based on position and time for a wavy effect
+                    const pulse = 1 + 0.15 * Math.sin(time + (obj.position.x * 0.5));
+                    obj.scale.set(pulse, pulse, pulse);
+
+                    // Dynamic Opacity Shift
+                    if (obj.material) {
+                        const baseOpacity = obj.userData.strata === "CORE" ? 0.8 : 0.4;
+                        obj.material.opacity = baseOpacity * (pulse * 0.8);
+                    }
+                }
+            });
+        } else {
+            // Reset state when animation is off
+            scene.children.forEach(obj => {
+                if (obj.isMesh && obj.userData && obj.userData.strata) {
+                    obj.scale.set(1, 1, 1);
+                    if (obj.material) {
+                        obj.material.opacity = obj.userData.strata === "CORE" ? 0.8 : 0.4;
+                    }
+                }
+            });
+        }
+
         renderer.render(scene, camera);
     }
+
+    // Start the loop
     animate();
 
     // *******--- Interaction --- ***************************//
