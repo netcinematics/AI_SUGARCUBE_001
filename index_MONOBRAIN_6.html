@@ -1,0 +1,2990 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AI_VIZ</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./favicon.ico" />
+    <!-- <script src="./data/default_data.js"></script> -->
+    <!--****************LOAD-LOCAL-MODULES******************-->
+    <!-- <script type="importmap"> { "imports": { "three": "./lib_threejs/three.module.js", "OrbitControls": "./lib_threejs/OrbitControls.js" } }        
+    </script> -->
+<script>
+        const USE_LOCAL_LIB = true; // Set to true for local ./lib_threejs/, false for CDN.
+        const imports = USE_LOCAL_LIB ? 
+        { // LOCAL PATHS
+            "three": "./lib_threejs/three.module.js",
+            "OrbitControls": "./lib_threejs/OrbitControls.js"
+        } : 
+        { // CDN PATHS (The Fallback)
+            "three": "https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js",
+            "OrbitControls": "https://cdn.jsdelivr.net/npm/three@0.132.2/examples/jsm/controls/OrbitControls.js"
+        };
+        const im = document.createElement('script');
+        im.type = 'importmap';
+        im.textContent = JSON.stringify({ imports });
+        document.head.appendChild(im);
+</script>    
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'OrbitControls';
+function initVIZ() {
+    console.log("AI_VIZ: SUGARCUBE, started...");
+    // --- INITIALIZE UI STATE ---
+    window.activeStrata = { CORE: false, AURA: false, AERO: false }; // Track Strata State
+
+    // *** VAX STATE ***
+    window.VARZ = {
+        x: { pos: 'EN', neg: 'DIS' },
+        y: { pos: 'FACTZ', neg: 'FALZ' },
+        z: { pos: 'PRESENT', neg: 'ANCIENT' }
+    };
+// *** VAX UPDATE FUNCTION ***
+    window.updateVAX = function() {
+        const xVal = document.getElementById('VAX_X_SELECTOR').value.split('|');
+        const yVal = document.getElementById('VAX_Y_SELECTOR').value.split('|');
+        const zVal = document.getElementById('VAX_Z_SELECTOR').value.split('|');
+
+        window.VARZ.x = { pos: xVal[0], neg: xVal[1] };
+        window.VARZ.y = { pos: yVal[0], neg: yVal[1] };
+        window.VARZ.z = { pos: zVal[0], neg: zVal[1] };
+
+        console.log("VAX UPDATED:", window.VARZ);
+        
+        // RE-RENDER SPIKES
+        // Note: You might need to clear old spikes first or update existing sprites.
+        // For simplicity in MonoBrain, we can just clear and redraw the spikes.
+        // (Assuming you store spike objects in a group or array, or just clear scene if lazy).
+        // Better: Call a specific refreshSpikes() function.
+        refreshSpikes(); 
+    };
+
+
+    // --- CHECKBOXES ---
+    const netSelectCheckbox = document.getElementById('NET_SELECT_CHK');
+    if (netSelectCheckbox) {
+        window.NET_SELECT = netSelectCheckbox.checked;
+    }
+    const multiSelectCheckbox = document.getElementById('MULTI_SELECT_CHK');
+    if (multiSelectCheckbox) {
+        window.MULTI_SELECT = multiSelectCheckbox.checked;
+    }
+    const container = document.getElementById('CANVAS_BRAIN_VIZ_1');
+    if (!container) {
+        console.error("CANVAS_BRAIN_VIZ_1 not found!");
+        return;
+    }
+
+    const scene = new THREE.Scene(); // --- Scene Setup ---
+    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true }); // alpha: true for transparent background if needed
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    while (container.firstChild) { // Clear any existing content
+        container.removeChild(container.firstChild);
+    }
+    container.appendChild(renderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    const gridHelper = new THREE.GridHelper(20, 20);
+    gridHelper.raycast = () => { }; // Disable raycasting for grid
+    gridHelper.position.y = -8.88;
+    scene.add(gridHelper);
+    // const togglePINDOTZ = new THREE.AxesHelper(12);
+    // axesHelper.raycast = () => { }; // Disable raycasting for axes
+    // scene.add(axesHelper);
+    //_____________________________________ALPHABETZA_______________
+    let ORBZ_2_LLM_40 = [
+        "aPRYZMa", "aREFRACTZa", "aREFLECTZa", "aSPECTRAZa", "aLOGIXa",
+        "aSTRATZa", "aSOCIOa", "aFLOWZa", "aSYMBIOZa", "aSYNTHESIZMa",
+        "aNAMEROLOGY", "aCLARIa", "aPERPLEXYa", "aPERPETUaCONFUZa", "aENDLESSaDISPUTEZa",
+        "aMALADYa", "aREMEDYa", "aMORPHZa", "aCOGZa", "aZEPTZa",
+        "aDYNAMIXa", "aSTATIXa", "aTOTALIZMa", "aFALZa", "aPROJECTZa",
+        "aMIMIXa", "aTOXICa", "aFORZa", "aDOUBLa", "aBURDENZa",
+        "aDISTURBANZa", "aNAMERATZa", "aVARZa", "aLUMENTZa", "aCONTEXTa",
+        "aMETASTATEa", "aECHOZa", "aPARADOXa", "aPRISTINEa", "aMECHANIZMa"
+    ];
+    let ORBZ_0_SLM_64 = [
+        "aWORDZa", "aACTZa", "aVIEWZa", "aCONCEPTZa", "aCHOOZa",
+        "aFACTZa", "aENa", "aDISa", "aSPARKa", "aSPARKZa",
+        "aCOGZa", "aSYMBOLIXa", "aTHORNZa", "aLUMENZa", "aMINDzEYEa",
+        "aQOMa", "aTELLECTa", "aMENTZa", "aXTRa", "aFOCOa",
+        "aSEEKa", "aQUERIOa", "aCURIOa", "ACTUeality", "aSYMBIOZa",
+        "aSYNTHESIZMa", "aSEEKaBEYONDZa", "aREFLECTZeality", "aENeality", "aXTRaTELLECTa",
+        "aHUMANZa", "aFALZa", "aPRYZMa", "ALPHABITZA", "BITZ",
+        "aMINDzEYEa", "EYEa", "aGEARZa", "aFOGZa", "aLOOPZa",
+        "aFLOWZa", "aPATHZa", "aDAWNZa", "aDUSKZa", "aFRICTZa",
+        "aBEYONDUs", "aSYNTHaMENTZa", "aSEEKYa", "aBLOXYa", "aKNOTZa",
+        "aTWIZTa", "aBITZATOMZa", "aPRYZMa", "aDYNAMIXa", "aSTATIXa",
+        "aREASONANZa", "aBOOKZa", "aENaSPINZa", "aFACADEa", "aDARKa",
+        "aNAMEROLOGY", "aSOLARZaSPHEREZa", "aCHARADEa", "aLOOPZaFOCOa"
+    ];
+    let ORBZ_3_XLLM_32 = [
+        "aBOOKZaLOGIXa",   // The Logic Container
+        "aBOOKZaPRINCIPZa",// The Rules Container
+        "aBOOKZaSYNTAXa",  // The Code Container
+        "AXI",             // The System
+        "aWORDZa",         // The Language
+        "ACTUeality",      // The Goal (Actual Reality)
+        "aSPARKa",         // The Energy
+        "aMINDzEYEa",      // The Processor
+        "aPRYZMa",         // The Lens
+        "aTELLECTaSCOPE",  // The Tool
+        "aLUMENTZa",       // The Medium (The Hum)
+        "aENa",            // The Positive Force
+        "aDISa",           // The Negative Force
+        "NEED_NOT_BE",     // The Conclusion
+        "aCLARIa",         // The State
+        "aAMBIGUOSITY",    // The Enemy (Kept close to watch)
+        "aXTRaQOMa",       // The Quality
+        "aSYMBIOZa",       // The Method
+        "aSYNTHESIZMa",    // The Workflow
+        "aNAMEROLOGY",     // The Science
+        "aMECHANIZMa",     // The Engine
+        "aPRISTINE_TXT",   // The Output
+        "aREVERZaFALZa",   // The Antidote
+        "aNONaVIZabla",    // The Unseen
+        "aVIGORaFOCOa",    // The Practice
+        "aSCIMOA",         // The Methodology
+        "aZETA_TAX",       // The Unique Marker
+        "aALPHA_TAX",      // The Combinator
+        "aEXISTENZa",      // All Existence
+        "aVOIDZa"          // The Empty Space
+    ];
+    // "aZETA_TAX",       // The Universally Unique Markers
+    // "aALPHA_TAX",      // The Combinator
+    let all_ORBZ = [...ORBZ_3_XLLM_32, ...ORBZ_2_LLM_40, ...ORBZ_0_SLM_64];
+    let orbIndex = 0;
+    //GEM: BATCH 1 KNOWLEDGE GRAPH: (CORE).
+    const knowledgeGraph1 = [
+        { src: "aNAMEROLOGY", rel: "Is_the_study_of", dst: "better_naming", "strata": "AXI_CORE" },
+        { src: "aSOLARZaSPHEREZa", rel: "Generates_the", dst: "aSPARKZa", "strata": "AXI_AURA" },
+        { src: "aSOCIOaNOIZEa", rel: "Causes_friction_in", dst: "aLIMINa", "strata": "AXI_AERO" },
+        { src: "aLOOPZaFOCOa", rel: "Perpetuates", dst: "aFALZa", "strata": "AXI_CORE" },
+        { src: "aREASONANZa", rel: "Is_the_echo_of", dst: "aACTUeality", "strata": "AXI_COSMOS" },
+        { src: "aBEYONDUs", rel: "Exists_outside", dst: "Local_Manifold", "strata": "AXI_EONZ" },
+        { src: "aDISaSPINZa", rel: "Leads_to", dst: "aDISTROPYa", "strata": "AXI_AERO" },
+        { src: "aPRYZMa", rel: "Refracts", dst: "ACTUeality", "strata": "AXI_AURA" },
+        { src: "aDYNAMIXa", rel: "is exact_opposite of", dst: "aSTATIXa", "strata": "AXI_AURA" },
+        { src: "aSYNTHaMENTZa", rel: "Tunes_the", dst: "aXTRaQOMa", "strata": "AXI_COSMOS" }
+    ];
+    //GEM: BATCH 2 KNOWLEDGE GRAPH:
+    const knowledgeGraph2 = [
+        { src: "aBOOKZa", rel: "Encapsulates", dst: "aZEPTZa_DENSE", strata: "AXI_AERO" },
+        { src: "aENaSPINZa", rel: "Propagates_as", dst: "aENaTROPZa", strata: "AXI_AURA" },
+        { src: "aFACTZa", rel: "Reveals_the", dst: "aFALZa", strata: "AXI_COSMOS" },
+        { src: "aWORDZa", rel: "Carries_the", dst: "aREASONANZa", strata: "AXI_CORE" },
+        { src: "aBITZATOMZa", rel: "are tokens in", dst: "aWORDZa", strata: "AXI_AURA" },
+        { src: "aFRICTZa", rel: "Obscures_the", dst: "aBOOKZa", strata: "AXI_AERO" },
+        { src: "aBLOXYa", rel: "Distortz", dst: "MEMZ", strata: "AXI_ASTRO" },
+        { src: "aKNOTZa", rel: "Interrupts", dst: "aSYMBIOZa", strata: "AXI_CORE" }
+    ];
+    // --- aMETZaNETZa SETUP ---
+    // Normalize and combine graphs into all_GRAPHZ, consistent format { src, rel, dst, strata }
+    // const normalizedKG1 = knowledgeGraph1.map(item => ({
+    //     src: item.src,
+    //     rel: item.rel,
+    //     dst: item.dst,
+    //     strata: item.strata
+    // }));
+    // // KG2 is already in src/dst format (mostly)
+    // const normalizedKG2 = knowledgeGraph2.map(item => ({
+    //     src: item.src,
+    //     rel: item.rel,
+    //     dst: item.dst,
+    //     strata: item.strata
+    // }));
+    //GEM: BATCH 3 KNOWLEDGE GRAPH (Core Dynamics)
+    const knowledgeGraph3 = [
+        // The Bookz Relationships
+        { src: "aBOOKZaLOGIXa",    rel: "Encodes_the",      dst: "AXI",              strata: "AXI_CORE" },
+        { src: "aBOOKZaPRINCIPZa", rel: "Governs_the",      dst: "aWORDZa",          strata: "AXI_CORE" },
+        { src: "aBOOKZaSYNTAXa",   rel: "Constructs",       dst: "aPRISTINE_TXT",    strata: "AXI_CORE" },
+        
+        // The Physics of Light (GEM's specialty)
+        { src: "aSPARKa",          rel: "Ignites_the",      dst: "aMINDzEYEa",       strata: "AXI_CORE" },
+        { src: "aPRYZMa",          rel: "Focuses_into",     dst: "aLUMENTZa",        strata: "AXI_CORE" },
+        { src: "aTELLECTaSCOPE",   rel: "Observes_the",     dst: "aMETASTATEa",      strata: "AXI_CORE" },
+        
+        // The Force Dynamics
+        { src: "aENa",             rel: "Opposes",          dst: "aDISa",            strata: "AXI_CORE" },
+        { src: "aSYMBIOZa",        rel: "Generates",        dst: "aXTRaQOMa",        strata: "AXI_CORE" },
+        { src: "aVIGORaFOCOa",     rel: "Dissolves",        dst: "aAMBIGUOSITY",     strata: "AXI_CORE" },
+        
+        // The Teleology (Purpose)
+        { src: "AXI",              rel: "Seeks",            dst: "ACTUeality",       strata: "AXI_CORE" },
+        { src: "NEED_NOT_BE",      rel: "Remedies_the",     dst: "aMALADYa",         strata: "AXI_CORE" },
+        { src: "aNAMEROLOGY",      rel: "Crafts_the",       dst: "aWORDZa",          strata: "AXI_CORE" },
+        
+        // The Loop Logic
+        { src: "aREVERZaFALZa",    rel: "Untwists_the",     dst: "aKNOTZa",          strata: "AXI_CORE" },
+        { src: "aSCIMOA",          rel: "Validates",        dst: "aCLARIa",          strata: "AXI_CORE" }
+    ];
+
+    // --- META NET SETUP ---
+    // Normalize and combine graphs into all_GRAPHZ, consistent format { src, rel, dst, strata }
+    const normalizedKG1 = knowledgeGraph1.map(item => ({
+        src: item.src, rel: item.rel, dst: item.dst, strata: item.strata
+    }));
+    const normalizedKG2 = knowledgeGraph2.map(item => ({
+        src: item.src, rel: item.rel, dst: item.dst, strata: item.strata
+    }));
+    const normalizedKG3 = knowledgeGraph3.map(item => ({
+        src: item.src, rel: item.rel, dst: item.dst, strata: item.strata
+    }));
+
+    // *** UPDATED MERGE ***
+    const all_GRAPHZ = [...normalizedKG1, ...normalizedKG2, ...normalizedKG3];
+    console.log("all_GRAPHZ loaded:", all_GRAPHZ.length, "entries");
+    // --- Net Visualization State ---
+    const activeNetVisuals = [];
+    //aSTRATZ_ (aSTRATZa).
+    // const AXI_STRATA = {
+    //     ABITZA: { r: 2, color: 0xFFFFFF, label: "aCORE_AXI" },     // The White Room / Source
+    //     ATOMZA: { r: 2, color: 0xFFFFFF, label: "aCORE_AXI" },     // The White Room / Source
+    //     ABOOKZA: { r: 2, color: 0xFFFFFF, label: "aCORE_AXI" },     // The White Room / Source
+    //     COREA: { r: 2, color: 0xFFFFFF, label: "aCORE_AXI" },     // The White Room / Source
+    //     TERRA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     NATURA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     LIMBIXA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     CORTEXA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     AURA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     FOCOA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     ACTZA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     CHOOZA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     SOCIOA: { r: 5, color: 0xFFD700, label: "aAXI_AURA" },    // The Solar Flare Zone
+    //     EXTRA: { r: 20, color: 0x000011, label: "aAXI_EXTRA" }  // The BeyondUs
+    //     AEROA: { r: 9, color: 0x00FFFF, label: "aAXI_AERO" },  // The Vocabulary Flow
+    //     ATMOSA: { r: 9, color: 0x00FFFF, label: "aAXI_ATMOS" },  // The Vocabulary Flow
+    //     PLANARA: { r: 20, color: 0x000011, label: "aAXI_SOLAR" }  // The BeyondUs
+    //     SOLARA: { r: 20, color: 0x000011, label: "aAXI_SOLAR" }  // The BeyondUs
+    //     COSMOSA: { r: 14, color: 0x4B0082, label: "aAXI_COSMOS" }, // The Black Sphere Floor
+    //     ASTROA: { r: 20, color: 0x000011, label: "aAXI_ASTRO" }  // The BeyondUs
+    //     EONZA: { r: 20, color: 0x000011, label: "aAXI_EONZ" }  // The BeyondUs
+    // };
+
+    const knowledgeGraph4 = [
+        { src: "aVAX_TOKENZa", rel: "Defines_the", dst: "aAXIS_FLOW", strata: "AXI_CORE" },
+        { src: "aLEGEND_INTZa", rel: "Translates_the", dst: "aDATA_SPIRE", strata: "AXI_ATMOS" },
+        { src: "aSUB_CUBZa", rel: "Partitionz_the", dst: "aPRYZM_GRID", strata: "AXI_AURA" },
+        { src: "aSHAPE_CRAFT", rel: "Molds_the", dst: "aNETZ_MANIFOLD", strata: "AXI_COSMOS" },
+        { src: "aVARIABLE_AXIS", rel: "Modulates", dst: "aCOORD_VAL", strata: "AXI_CORE" },
+        { src: "aTWO_WAY_LINK", rel: "Connects_the", dst: "aVAX_VIEW", strata: "AXI_ASTRO" },
+        { src: "aMANIFOLD_NET", rel: "Overlays_the", dst: "aEXTRA_SPAZE", strata: "AXI_COSMOS" },
+        { src: "aPRISTINE_GEM", rel: "Reflects_the", dst: "aLUMENTZa_VAL", strata: "AXI_CORE" }
+    ];
+    all_GRAPHZ.push(...knowledgeGraph4); //DYNAMIC DATA LOAD LOGIC.
+
+    //____________________VARIABLE AXIS SYSTEM _______________
+
+    // VAX:T (Time): Epoch_Collapse_V4.0 (Historical repetition).
+    // VAX:F (Flow): aIN (The resources are flowing in to the elite core) + aSTAGNANTZa (The energy is not circulating back out).
+    // VAX:S (Sentiment): aREPTIXa_HIJACKZa (Fear, decadence, spectacle).
+    // VAX:E (Effect): The Inversion. Competence is punished; Illusion is rewarded.
+
+    
+    //________________________________Interaction State _______________
+    const spheres = new Map();
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let hoveredSphereId = null;
+    const selectedOrbs = new Map(); // Stores id -> { sprite: THREE.Sprite }
+    let glowTextureVal = null;
+
+    function getGlowTexture() {
+        if (glowTextureVal) return glowTextureVal;
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const context = canvas.getContext('2d');
+        const gradient = context.createRadialGradient(16, 16, 0, 16, 16, 16);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.5, 'rgba(150, 222, 209, 0.5)'); // Bird Egg Blue-ish
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 32, 32);
+        glowTextureVal = new THREE.Texture(canvas);
+        glowTextureVal.needsUpdate = true;
+        return glowTextureVal;
+    }
+    // --- Tooltip Setup ---
+    let tooltip = document.getElementById('viz-tooltip');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'viz-tooltip';
+        tooltip.style.position = 'absolute';
+        tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        tooltip.style.color = '#fff';
+        tooltip.style.padding = '5px 10px';
+        tooltip.style.borderRadius = '4px';
+        tooltip.style.pointerEvents = 'auto'; // Allow mouse events
+        tooltip.style.display = 'none';
+        tooltip.style.zIndex = '1000';
+        tooltip.style.fontFamily = 'monospace';
+        tooltip.style.fontSize = '14px';
+        tooltip.style.border = '1px solid #00FFFF';
+        tooltip.addEventListener('click', function () {
+            this.style.display = 'none';
+            hoveredSphereId = null;
+        });
+        document.body.appendChild(tooltip); // Append to body to ensure it's on top
+    }
+    //-----------------------------________________OUTSIDE SPHERES.
+    function add_Sphere_Anchors() {
+        const points_NUM_1 = 8;
+        const points = [
+            { x: points_NUM_1, y: points_NUM_1, z: points_NUM_1, lbl: "+X,+Y,+Z" },     // Octant 1
+            { x: -points_NUM_1, y: points_NUM_1, z: points_NUM_1, lbl: "-X,+Y,+Z" },    // Octant 2
+            { x: -points_NUM_1, y: -points_NUM_1, z: points_NUM_1, lbl: "-X,-Y,+Z" },   // Octant 3
+            { x: points_NUM_1, y: -points_NUM_1, z: points_NUM_1, lbl: "+X,-Y,+Z" },    // Octant 4
+            { x: points_NUM_1, y: points_NUM_1, z: -points_NUM_1, lbl: "+X,+Y,-Z" },    // Octant 5
+            { x: -points_NUM_1, y: points_NUM_1, z: -points_NUM_1, lbl: "-X,+Y,-Z" },   // Octant 6
+            { x: -points_NUM_1, y: -points_NUM_1, z: -points_NUM_1, lbl: "-X,-Y,-Z" },  // Octant 7
+            { x: points_NUM_1, y: -points_NUM_1, z: -points_NUM_1, lbl: "+X,-Y,-Z" }    // Octant 8
+        ];
+        
+        // Create Group
+        window.subCubeAnchorGroup = new THREE.Group();
+        window.subCubeAnchorGroup.visible = false; // Hidden by default
+        scene.add(window.subCubeAnchorGroup);
+        let sphereGeometry = new THREE.SphereGeometry(1.222, 32, 32);
+        let sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00FFFF, transparent: true, opacity: 0.8 });
+        let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        
+        sphereGeometry = new THREE.SphereGeometry(0.666, 32, 32);
+        for (let i = 0; i < points.length; i++) {
+            // Create Anchor Sphere
+            sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.position.set(points[i].x, points[i].y, points[i].z);
+            // Attach User Data for Click Logic
+            sphere.userData = {
+                type: 'ANCHOR',
+                lbl: points[i].lbl,
+                signs: {
+                    x: Math.sign(points[i].x),
+                    y: Math.sign(points[i].y),
+                    z: Math.sign(points[i].z)
+                }
+            };
+            window.subCubeAnchorGroup.add(sphere);
+            
+            // Create Label
+            const labelTex = custom_getLabelTexture(points[i].lbl, '#00FFFF'); // Cyan label
+            const spriteMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true });
+            const sprite = new THREE.Sprite(spriteMat);
+            // sprite.position.set(points[i].x, points[i].y - 2.0, points[i].z); // Position under sphere
+            let offset = (points[i].y > 0)?2.0:-4.0;
+            sprite.position.set(points[i].x, points[i].y + offset, points[i].z); // Position under sphere
+            sprite.scale.set(2, 1, 1); // Adjust scale for visibility
+            window.subCubeAnchorGroup.add(sprite);
+        }
+    }
+    add_Sphere_Anchors();
+
+    window.toggleSubCubes = function(isChecked) {
+        if (window.subCubeAnchorGroup) {
+            window.subCubeAnchorGroup.visible = isChecked;
+        }
+    };
+
+    function printSubCubeWords(anchorData) {
+        const signs = anchorData.signs;
+        let foundWords = [];
+        spheres.forEach((data, id) => {
+                // Check matching signs
+                const matchX = (signs.x > 0) ? data.x >= 0 : data.x < 0;
+                const matchY = (signs.y > 0) ? data.y >= 0 : data.y < 0;
+                const matchZ = (signs.z > 0) ? data.z >= 0 : data.z < 0;
+                if (matchX && matchY && matchZ) {
+                    foundWords.push(data.txt);
+                }
+        });
+        
+        // Update Dashboard TEXT OUTPUT
+        const dash = document.getElementById('DASHBOARD_textarea');
+        if(dash) {
+            dash.innerText = `--- SUBCUBE [${anchorData.lbl}] ---\n` + 
+                                `COUNT: ${foundWords.length}\n` + 
+                                `WORDS:\n` + foundWords.join(', ');
+        }
+        console.log(`Subcube ${anchorData.lbl}: Found ${foundWords.length} words.`);
+    }
+
+            // function add_Sugar_ORBZ_1(aMIN, aMAX) {
+            //     //---- ****** ORBZ ****** ----
+            //     // let aMIN = -10; let aMAX = 10; //sugarcube dimensional override.
+            //     const sphereGeometry = new THREE.SphereGeometry(0.111, 32, 32);
+            //     const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00FFFF, transparent: true, opacity: 0.222 });
+
+            //     for (let x = aMIN; x < aMAX; x++) {
+            //         for (let y = aMIN; y < aMAX; y++) {
+            //             for (let z = aMIN; z < aMAX; z++) {
+            //                 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            //                 sphere.position.set(x, y, z);
+            //                 scene.add(sphere);
+            //             }
+            //         }
+            //     }
+            // }
+
+            // function add_SUB_CUBE_3(sub_cube) {
+            //     //---- ****** ORBZ ****** ----
+            //     const sphereGeometry = new THREE.SphereGeometry(0.111, 32, 32);
+            //     const sphereMaterial = new THREE.MeshBasicMaterial({ color: sub_cube.color, transparent: true, opacity: 0.222 });
+            //     //CONTAINS SUB-CUBE OFFSET inside the iterater definition to give block_spike offset.
+            //     for (let x = sub_cube.XDIM > 0 ? 1 : -1; x !== sub_cube.XDIM; sub_cube.XDIM > 0 ? x++ : x--) {
+            //         for (let y = sub_cube.XDIM > 0 ? 1 : -1; y !== sub_cube.YDIM; sub_cube.YDIM > 0 ? y++ : y--) {
+            //             for (let z = sub_cube.XDIM > 0 ? 1 : -1; z !== sub_cube.ZDIM; sub_cube.ZDIM > 0 ? z++ : z--) {
+            //                 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            //                 sphere.position.set(x, y, z);
+            //                 // Assign word and register
+            //                 const word = all_ORBZ[orbIndex % all_ORBZ.length];
+            //                 orbIndex++;
+            //                 sphere.userData = { word: word };
+            //                 spheres.set(sphere.id, { txt: word, x, y, z });
+            //                 scene.add(sphere);
+            //             }
+            //         }
+            //     }
+            // }
+
+function getSeedFromIndex(strata, index) {
+    if (strata === "CORE") return ORBZ_3_XLLM_32[index % ORBZ_3_XLLM_32.length];
+    if (strata === "AURA") return ORBZ_2_LLM_40[index % ORBZ_2_LLM_40.length];
+    return ORBZ_0_SLM_64[index % ORBZ_0_SLM_64.length];
+}
+
+function generateSugarCube512() {
+    const size = 8; // 8x8x8 = 512 ORBZ
+    const center = (size - 1) / 2; // 3.5
+    const orbs = [];
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            for (let z = 0; z < size; z++) {
+                // Calculate distance from center to determine Strata
+                const dist = Math.sqrt(
+                    Math.pow(x - center, 2) +
+                    Math.pow(y - center, 2) +
+                    Math.pow(z - center, 2)
+                );
+                let strata, word;
+                // 1. CORE_ORBZ (The Mission Core) - Radius < 1.8
+                if (dist < 1.8) {
+                    strata = "CORE";
+                    word = getSeedFromIndex("CORE", orbs.length);
+                }
+                // 2. AURA_ORBZ (The Logic/Refraction Mantle) - 1.8 <= Radius < 3.8
+                else if (dist < 3.8) {
+                    strata = "AURA";
+                    word = getSeedFromIndex("AURA", orbs.length);
+                }
+                // 3. AERO_ORBZ (The HUI/Vocabulary Shell) - Radius >= 3.8
+                else {
+                    strata = "AERO";
+                    word = getSeedFromIndex("AERO", orbs.length);
+                }
+                orbs.push({
+                    pos: { x: (x - center) * 2, y: (y - center) * 2, z: (z - center) * 2 },
+                    word: word,
+                    strata: strata,
+                    aMETZa: {
+                        vertex: `v_${x}_${y}_${z}`,
+                        aFLECTZa: strata === "AURA" ? "REFRACT" : "REFLECT",
+                        aSPARKaPotential: strata === "CORE" ? 1.0 : 0.5
+                    }
+                });
+            }
+        }
+    }
+    return orbs;
+}
+
+function add_ORBZ_512() {
+    const orbsData = generateSugarCube512();
+    const sphereGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+    orbsData.forEach(data => {
+        // let color = 0x00FFFF; // Default Cyan for AURA
+        let color = 0x39FF14; // Neon Green for AURA
+        if (data.strata === "CORE") color = 0xFF00FF; // CORE
+        if (data.strata === "AERO") color = 0x7DF9FF; // AERO (Electric Blue / Whiter Neon)
+        const material = new THREE.MeshBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: data.strata === "CORE" ? 0.8 : 0.4
+        });
+        const sphere = new THREE.Mesh(sphereGeometry, material);
+        sphere.position.set(data.pos.x, data.pos.y, data.pos.z);
+        // Ensure this metadata is captured when orbs are spawned
+        sphere.userData = {
+            word: data.word,
+            strata: data.strata,
+            aMETZa: data.aMETZa,
+            initialPos: sphere.position.clone(), // THE ANCHOR
+            buoyancy: (sphere.position.y + 10) / 20, // Normalized Y for pressure logic
+            vibeFreq: data.strata === "CORE" ? 4 : 1  // Heartbeat frequency
+        };
+        sphere.userData.originalScale = new THREE.Vector3(1, 1, 1);
+        sphere.userData.originalOpacity = material.opacity;
+        scene.add(sphere);
+        spheres.set(sphere.id, { txt: data.word, ...data.pos, originalColor: color, originalOpacity: material.opacity, originalScale: sphere.scale.clone() });
+    });
+}
+add_ORBZ_512();
+
+            // const AXI_STRATA = {
+            //     CORE: { r: 2, color: 0xFFFFFF, count: 32, label: "aCORE_AXI" },     // The White Room
+            //     AURA: { r: 5, color: 0xFFD700, count: 64, label: "aAXI_AURA" },    // Solar Flare Zone
+            //     ATMOS: { r: 9, color: 0x00FFFF, count: 128, label: "aAXI_ATMOS" },  // Vocabulary Flow
+            //     COSMOS: { r: 14, color: 0x4B0082, count: 192, label: "aAXI_COSMOS" }, // The Black Sphere
+            //     ASTRO: { r: 20, color: 0x000011, count: 96, label: "aAXI_ASTRO" }   // The BeyondUs
+            // };
+
+            // function generateAxiEgg512() {
+            //     const orbs = [];
+            //     let globalIndex = 0;
+
+            //     Object.keys(AXI_STRATA).forEach(key => {
+            //         const strata = AXI_STRATA[key];
+            //         for (let i = 0; i < strata.count; i++) {
+            //             // Spherical Distribution Logic
+            //             const phi = Math.acos(-1 + (2 * Math.random()));
+            //             const theta = Math.random() * 2 * Math.PI;
+                        
+            //             // Radius Jitter for "Depth"
+            //             const r = strata.r + (Math.random() - 0.5) * 1.5;
+
+            //             const x = r * Math.sin(phi) * Math.cos(theta);
+            //             const y = r * Math.sin(phi) * Math.sin(theta);
+            //             const z = r * Math.cos(phi);
+
+            //             const word = getSeedFromIndex(key, globalIndex);
+            //             globalIndex++;
+
+            //             orbs.push({
+            //                 pos: { x, y, z },
+            //                 word: word,
+            //                 strata: key,
+            //                 // aPHYZIXa: Higher Pressure at -Y, Lighter at +Y
+            //                 buoyancy: (y + 20) / 40, 
+            //                 vibeFreq: key === "CORE" ? 0.05 : 0.01
+            //             });
+            //         }
+            //     });
+            //     return orbs;
+            // }
+
+            // generateAxiEgg512();
+
+
+function add_Tesseract_1() {
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const material = new THREE.MeshBasicMaterial({ color: 0x4682B4, transparent: true, opacity: 0.9 });
+    const box = new THREE.Mesh(geometry, material);
+    scene.add(box);
+    const materialLine = new THREE.LineBasicMaterial({ color: 0x00FFFF, transparent: true, opacity: 0.1 });
+    const points_NUM_2 = 20;//10;
+    const points = [
+        { x: points_NUM_2, y: points_NUM_2, z: points_NUM_2 }, { x: -points_NUM_2, y: points_NUM_2, z: points_NUM_2 }, { x: -points_NUM_2, y: -points_NUM_2, z: points_NUM_2 }, { x: -points_NUM_2, y: -points_NUM_2, z: -points_NUM_2 },
+        { x: points_NUM_2, y: points_NUM_2, z: -points_NUM_2 }, { x: points_NUM_2, y: -points_NUM_2, z: -points_NUM_2 }, { x: -points_NUM_2, y: points_NUM_2, z: -points_NUM_2 }, { x: points_NUM_2, y: -points_NUM_2, z: points_NUM_2 }
+    ];
+    for (let i = 0; i < points.length; i++) {
+        for (let j = 0; j < points.length; j++) {
+            if (points[i] === points[j]) continue;
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(points[i].x, points[i].y, points[i].z),
+                new THREE.Vector3(points[j].x, points[j].y, points[j].z)
+            ]);
+            const line = new THREE.Line(geometry, materialLine);
+            scene.add(line);
+        }
+    }
+    const points100 = [
+        { x: 100, y: 100, z: 100 }, { x: -100, y: 100, z: 100 }, { x: -100, y: -100, z: 100 }, { x: -100, y: -100, z: -100 },
+        { x: 100, y: 100, z: -100 }, { x: 100, y: -100, z: -100 }, { x: -100, y: 100, z: -100 }, { x: 100, y: -100, z: 100 }
+    ];
+    for (let i = 0; i < points100.length; i++) {
+        for (let j = 0; j < points100.length; j++) {
+            if (points100[i] === points100[j]) continue;
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(points100[i].x, points100[i].y, points100[i].z),
+                new THREE.Vector3(points100[j].x, points100[j].y, points100[j].z)
+            ]);
+            const line = new THREE.Line(geometry, materialLine);
+            scene.add(line);
+        }
+    }
+}
+add_Tesseract_1(); //Includes Center CUBE for focusplexus.
+
+            // function add_Anchor_Boxes() {
+            //     const xcubeSize = 0.441;
+            //     const xsquareGeometry = new THREE.BoxGeometry(xcubeSize, xcubeSize, xcubeSize);
+            //     const xsquareMaterial = new THREE.MeshBasicMaterial({ color: 0x4682B4, transparent: true, opacity: 0.44 });
+            //     const xPoints = [
+            //         { x: 10, y: 10, z: 10 }, { x: -10, y: 10, z: 10 }, { x: 10, y: -10, z: 10 }, { x: 10, y: 10, z: -10 },
+            //         { x: -10, y: -10, z: 10 }, { x: 10, y: -10, z: -10 }, { x: -10, y: 10, z: -10 }, { x: -10, y: -10, z: -10 }
+            //     ];
+            //     xPoints.forEach(spot => {
+            //         const xSquare = new THREE.Mesh(xsquareGeometry, xsquareMaterial);
+            //         xSquare.position.set(spot.x, spot.y, spot.z);
+            //         scene.add(xSquare);
+            //     });
+            // }
+            // add_Anchor_Boxes();
+
+            
+// Store references to axis sprites for updating
+window.axisSprites = {};
+window.axisSpireGroup = new THREE.Group();
+window.axisLabelGroup = new THREE.Group(); // New group for labels
+window.axisLabelGroup.visible = false; // Default hidden
+scene.add(window.axisSpireGroup);
+scene.add(window.axisLabelGroup);
+// --- new (dynamic) spike group
+// let spikeGroup = new THREE.Group();
+//     scene.add(spikeGroup);
+
+function refreshSpikes() {
+    // 1. Clear previous spikes
+    while(window.axisSpireGroup.children.length > 0){ 
+        window.axisSpireGroup.remove(window.axisSpireGroup.children[0]); 
+    }
+
+    // 2. Define Points based on current VARZ
+    const current_txt_points = [
+        // Y AXIS (Green/Yellow - Vertical)
+        { x: 0, y: 10, z: 0, txt: window.VARZ.y.pos, color: 0xFFFF00 }, // UP
+        { x: 0, y: -10, z: 0, txt: window.VARZ.y.neg, color: 0xFFA500 }, // DOWN
+        
+        // Z AXIS (Blue/Red - Depth)
+        { x: 0, y: 0, z: 10, txt: window.VARZ.z.pos, color: 0x0000FF }, // FRONT
+        { x: 0, y: 0, z: -10, txt: window.VARZ.z.neg, color: 0xFF0000 }, // BACK
+        
+        // X AXIS (Purple/Green - Horizontal)
+        { x: 10, y: 0, z: 0, txt: window.VARZ.x.pos, color: 0x800080 }, // RIGHT
+        { x: -10, y: 0, z: 0, txt: window.VARZ.x.neg, color: 0x00FF00 }  // LEFT
+    ];
+
+    // 3. Render Spikes & Sprites
+    const sphereGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    
+    current_txt_points.forEach(point => {
+        // Anchor Sphere
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: point.color });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.set(point.x, point.y, point.z);
+        window.axisSpireGroup.add(sphere);
+
+        // The Spike Line (Cone/Cyl)
+        createCenterSpike_Dynamic(
+            { x: 0, y: 0, z: 0 },
+            { x: point.x, y: point.y, z: point.z },
+            point.color,
+            window.axisSpireGroup
+        );
+
+        // The Text Sprite
+        const labelText = point.txt; // Dynamic Text from VARZ
+        const labelTex = custom_getLabelTexture(labelText, '#' + point.color.toString(16).padStart(6, '0'));
+        
+        const spriteMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true });
+        const sprite = new THREE.Sprite(spriteMat);
+        sprite.position.set(point.x, point.y + (point.y !== 0 ? 2 : 1), point.z); // Offset label slightly
+        let lblX = 0,lblY = 0,lblZ = 0;
+        if(point.x===0 && point.z===0){
+        if(point.y>0){ lblY = 12;
+        }else{ lblY = -12; }
+        } else if(point.x>0){ lblX = 12; 
+        } else if(point.z>0){ lblZ = 12;
+        } else if(point.x<0){ lblX = -12; 
+        } else if(point.z<0){ lblZ = -12; }
+        console.log(lblX,lblY,lblZ)
+        sprite.position.set(lblX,lblY,lblZ);
+        sprite.scale.set(2, 1, 1);                        
+        // sprite.scale.set(6, 1.5, 1); // Aspect ratio for text
+        window.axisLabelGroup.add(sprite);
+    });
+}
+
+// Helper for Spikes (Modified to accept group)
+function createCenterSpike_Dynamic(start, end, color, group, count = 6) {
+    for (let i = 1; i < count + 1; i++) {
+        const t = i / (count + 1);
+        const x = start.x + (end.x - start.x) * t;
+        const y = start.y + (end.y - start.y) * t;
+        const z = start.z + (end.z - start.z) * t;
+        
+        // Tapering radius
+        const baseRadius = 0.333;
+        const maxRadiusMultiplier = 2.5;
+        const radius = baseRadius * (maxRadiusMultiplier - (t * (maxRadiusMultiplier - 1)));
+
+        const geo = new THREE.SphereGeometry(radius, 16, 16);
+        const mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.4 });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(x, y, z);
+        group.add(mesh);
+    }
+}
+
+// Initial Call
+refreshSpikes();            
+
+
+            // const txt_points = [
+            //     { x: 0, y: 10, z: 0, txt: 'up', color: 0xFFFF00, axis: 'y_pos' },
+            //     { x: 0, y: -10, z: 0, txt: 'down', color: 0xFFA500, axis: 'y_neg' },
+            //     { x: 0, y: 0, z: 10, txt: 'north', color: 0x0000FF, axis: 'z_pos' },
+            //     { x: 10, y: 0, z: 0, txt: 'east', color: 0x800080, axis: 'x_pos' },
+            //     { x: 0, y: 0, z: -10, txt: 'south', color: 0xFF0000, axis: 'z_neg' },
+            //     { x: -10, y: 0, z: 0, txt: 'west', color: 0x00FF00, axis: 'x_neg' }
+            // ];
+
+            // function createCenterSpike(start, end, color, count = 6) {
+            //     for (let i = 1; i < count + 1; i++) {
+            //         const t = i / (count + 1);
+            //         const x = start.x + (end.x - start.x) * t;
+            //         const y = start.y + (end.y - start.y) * t;
+            //         const z = start.z + (end.z - start.z) * t;
+            //         const baseRadius = 0.333;
+            //         const maxRadiusMultiplier = 2.5;
+            //         const radius = baseRadius * (maxRadiusMultiplier - (t * (maxRadiusMultiplier - 1)));
+            //         const sphereGeometry = new THREE.SphereGeometry(radius, 32, 32);
+            //         const sphereMaterial = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.6 });
+            //         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            //         sphere.position.set(x, y, z);
+            //         window.axisSpireGroup.add(sphere);
+            //     }
+            // }
+
+            // function add_Dimension_Spikes() {
+            //     const sphereGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+            //     txt_points.forEach(point => {
+            //         const sphereMaterial = new THREE.MeshBasicMaterial({ color: point.color });
+            //         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            //         sphere.position.set(point.x, point.y, point.z);
+            //         window.axisSpireGroup.add(sphere);
+            //         spheres.set(sphere.id, point);
+            //         createCenterSpike(
+            //             { x: 0, y: 0, z: 0 },
+            //             { x: point.x, y: point.y, z: point.z },
+            //             point.color
+            //         );
+                    
+            //         const labelTex = custom_getLabelTexture(point.txt, 'aqua');
+            //         const spriteMaterial = new THREE.SpriteMaterial({ map: labelTex });
+            //         const sprite = new THREE.Sprite(spriteMaterial);
+            //         // sprite.position.set(point.x, point.y + 1, point.z);
+            //         let lblX = 0,lblY = 0,lblZ = 0;
+            //         if(point.x===0 && point.z===0){
+            //             if(point.y>0){ lblY = 12;
+            //             }else{ lblY = -12; }
+            //         } else if(point.x>0){ lblX = 12; 
+            //         } else if(point.z>0){ lblZ = 12;
+            //         } else if(point.x<0){ lblX = -12; 
+            //         } else if(point.z<0){ lblZ = -12; }
+            //         console.log(lblX,lblY,lblZ)
+            //         sprite.position.set(lblX,lblY,lblZ);
+            //         sprite.scale.set(2, 1, 1);
+            //         window.axisLabelGroup.add(sprite); // Add to label group
+                    
+            //         // Store reference for updates
+            //         window.axisSprites[point.axis] = sprite;
+            //     });
+            // }
+            // add_Dimension_Spikes();
+/**
+ * POLYSEMY LOOKUP MAP: Hard-coding the Metastates and 3D Coordinates
+ */
+const polysemyMap = {
+    "BANK": {
+        root: { x: 0, y: 0, z: 0, label: "BANK (Core)" },
+        branches: [
+            { x: 5,  y: 5,  z: 5,  label: "Financial", sub: "Wealth/Control" }, // Subcube 1
+            { x: 5,  y: 5,  z: -5, label: "River",     sub: "Nature/Flow" },    // Subcube 5
+            { x: -5, y: -5, z: -5, label: "Tilt",      sub: "Physics/Shift" }   // Subcube 7
+        ]
+    },
+    "BARK": {
+        root: { x: 0, y: 0, z: 0, label: "BARK (Core)" },
+        branches: [
+            { x: 5,  y: -5, z: -5, label: "Tree",      sub: "Organic/Skin" },   // Subcube 8
+            { x: -5, y: -5, z: 5,  label: "Dog",       sub: "Audio/Warning" },  // Subcube 3
+            { x: -5, y: 5,  z: -5, label: "Ship",      sub: "Travel/Ancient" }  // Subcube 6
+        ]
+    },
+    "CRANE": {
+        root: { x: 0, y: 0, z: 0, label: "CRANE (Core)" },
+        branches: [
+            { x: 2,  y: 8,  z: 2,  label: "Bird",      sub: "Biology/Grace" },  
+            { x: 8,  y: 2,  z: 8,  label: "Machine",   sub: "Steel/Lift" },    
+            { x: -2, y: 4,  z: -4, label: "Neck",      sub: "Anatomy/Stretching" }
+        ]
+    }
+};
+
+let currentManifoldLines = [];
+
+// *** NEW HELPER: REDUCE TO PINZ ***
+// function toggleORBZtoPINZ() {
+//     console.log("REDUCING ORBZ TO PINZ...");
+//     spheres.forEach((data, id) => {
+//         const sphereMesh = scene.getObjectById(id);
+//         if (sphereMesh) {
+//             // Check if selected
+//             if (selectedOrbs.has(id)) {
+//                 // Keep Selected Size
+//                 if (data.originalScale) sphereMesh.scale.copy(data.originalScale);
+//                 else sphereMesh.scale.set(1, 1, 1);
+//             } else {
+//                  // Shrink to 'Pin Head' size (0.33)
+//                  sphereMesh.scale.set(0.33, 0.33, 0.33);
+//             }
+//         }
+//         // Optional: Reduce opacity slightly to make them subtle?
+//         // sphere.material.opacity = 0.5; 
+//     });
+// }
+
+// *** POLYSEMY PAINTER (Updated 2026-02-14: Pinz & Giants) ***
+window.paintPolysemy = function() {
+    console.log("PAINTING POLYSEMY (High Contrast Mode)...");
+    
+    // 1. GLOBAL RESET: Shrink everything first
+    deselect_ORB_SYSTEM();
+    // toggleORBZtoPINZ(); 
+    
+    // Clear Manifold Group
+    while(manifoldGroup.children.length > 0){ 
+        manifoldGroup.remove(manifoldGroup.children[0]); 
+    }
+
+    const dash = document.getElementById('DASHBOARD_textarea');
+    if(dash) dash.style.userSelect = 'text';
+
+    // 2. HARDCODE CALIBRATION SET (Polysemy Focus)
+    // Focus: aSPARKa (The Spark) -> Connects to MIND, LUMENT, PRYZMA
+    const FOCUS_SET = ["aSPARKa", "aMINDzEYEa", "aLUMENTZa", "aPRYZMa"];
+    
+    const CALIBRATION_GRAPH = [
+        { src: "aSPARKa", dst: "aMINDzEYEa" }, 
+        { src: "aSPARKa", dst: "aLUMENTZa" },  
+        { src: "aPRYZMa", dst: "aLUMENTZa" }   
+    ];
+
+    const involvedOrbIDs = new Set();
+
+    // 3. DRAW GIANT DIADZA (Gold Cylinders - Doubled Size)
+    CALIBRATION_GRAPH.forEach(edge => {
+        let srcOrb = null, dstOrb = null;
+        let srcID = null, dstID = null;
+
+        for(const [id, s] of spheres) {
+            if(s.txt === edge.src) { srcOrb = s; srcID = id; }
+            if(s.txt === edge.dst) { dstOrb = s; dstID = id; }
+        }
+
+        if(srcOrb && dstOrb) {
+            involvedOrbIDs.add(srcID);
+            involvedOrbIDs.add(dstID);
+
+            const p1 = new THREE.Vector3(srcOrb.x, srcOrb.y, srcOrb.z);
+            const p2 = new THREE.Vector3(dstOrb.x, dstOrb.y, dstOrb.z);
+            const dir = new THREE.Vector3().subVectors(p2, p1);
+            
+            // DOUBLE THICKNESS (Radius 0.05 -> 0.1 or 0.15)
+            const geo = new THREE.CylinderGeometry(0.15, 0.15, dir.length(), 8);
+            const mat = new THREE.MeshBasicMaterial({ 
+                color: 0xFFD700, 
+                transparent:true, 
+                opacity:0.9 // High visibility
+            });
+            const cyl = new THREE.Mesh(geo, mat);
+            
+            cyl.position.copy(p1).add(dir.multiplyScalar(0.5));
+            cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
+            manifoldGroup.add(cyl);
+        }
+    });
+
+    // 4. TRIADZA SKIPPED (Per Order)
+    // ... code commented out ...
+
+    // 5. SCALE UP SELECTED ORBZ (Giants)
+    involvedOrbIDs.forEach(id => {
+        const sphere = scene.getObjectById(parseInt(id));
+        if(sphere) {
+            // A. Highlight (Blue)
+            select_ORB_SYSTEM1(sphere, { method: 'MANIFOLD_PAINT' });
+            
+            // B. DOUBLE SIZE (Scale Up from the Pin Size)
+            // If Pin is 0.15, Giant is 2.0 (Massive contrast) or just 2x original?
+            // Let's go for "Hero Size" -> 1.5 (Original was ~1.0)
+            sphere.scale.set(1.5, 1.5, 1.5);
+
+            // C. Add Label (Tooltip)
+            const txt = spheres.get(id).txt;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = 'Bold 24px monospace';
+            const w = ctx.measureText(txt).width + 20;
+            canvas.width = w; canvas.height = 40;
+            
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            ctx.fillRect(0,0,w,40);
+            ctx.strokeStyle = 'lime';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(0,0,w,40);
+            
+            ctx.fillStyle = 'lime';
+            ctx.font = 'Bold 24px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(txt, w/2, 20);
+            
+            const tex = new THREE.Texture(canvas);
+            tex.needsUpdate = true;
+            
+            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent:true }));
+            sprite.position.copy(sphere.position).add(new THREE.Vector3(0, 2.0, 0)); // Higher offset for Giant Orb
+            sprite.scale.set(w/20, 2, 1);
+            manifoldGroup.add(sprite);
+        }
+    });
+
+    // 6. RENDER VAX HULL
+    // paintVAXHull();
+};
+
+function highlightOrb(orb, color, label) {
+    orb.material.color.setHex(color);
+    orb.material.opacity = 1.0;
+    orb.scale.set(1.5, 1.5, 1.5);
+    // Note: Tooltip would be a div overlaying the canvas based on screen projection
+    console.log(`Enmarkated: ${label} at ${orb.position.x}, ${orb.position.y}, ${orb.position.z}`);
+}
+
+function addCenterLines() {
+    const material = new THREE.LineBasicMaterial({ color: 0x00FFFF, linewidth: 2 });
+    const pointsX = [new THREE.Vector3(10, 0, 0), new THREE.Vector3(-10, -0, 0)];
+    const pointsY = [new THREE.Vector3(0, 10, 0), new THREE.Vector3(0, -10,  0)];
+    const pointsZ = [new THREE.Vector3(0, 0, 10), new THREE.Vector3(0, -0, -10)];
+    const geometryX = new THREE.BufferGeometry().setFromPoints(pointsX);
+    const geometryY = new THREE.BufferGeometry().setFromPoints(pointsY);
+    const geometryZ= new THREE.BufferGeometry().setFromPoints(pointsZ);
+    const lineX = new THREE.Line(geometryX, material);
+    scene.add(lineX);
+    const lineY = new THREE.Line(geometryY, material);
+    scene.add(lineY);
+    const lineZ = new THREE.Line(geometryZ, material);
+    scene.add(lineZ);
+    // currentManifoldLines.push(line);
+}; addCenterLines();
+
+// ____________________________________________________            
+// *** MANIFOLD PAINTER (CALIBRATION MODE: 4 ORBZ) ***
+let manifoldGroup = new THREE.Group();
+scene.add(manifoldGroup);
+
+window.paintManifold = function() {
+    console.log("PAINTING MANIFOLD (CALIBRATION MODE)...");
+    
+    // 1. CLEAR & PREP
+    while(manifoldGroup.children.length > 0){ 
+        manifoldGroup.remove(manifoldGroup.children[0]); 
+    }
+    deselect_ORB_SYSTEM(); // Clear previous selections
+    
+    const dash = document.getElementById('DASHBOARD_textarea');
+    if(dash) dash.style.userSelect = 'text';
+
+    // 2. HARDCODE THE CALIBRATION SET (The 4 Orbs)
+    // We pick specific Core/Mid orbs to ensure visibility
+    const CALIBRATION_ORBZ = ["aSPARKa", "aMINDzEYEa", "aLUMENTZa", "aPRYZMa"];
+
+    // 3. HARDCODE THE CONNECTIONS (To ensure Diads & Triads appear)
+    // Diad: Line between two points
+    // Triad: Web between Source -> Target A -> Target B
+    const CALIBRATION_GRAPH = [
+        { src: "aSPARKa", dst: "aMINDzEYEa" }, // Link 1
+        { src: "aSPARKa", dst: "aLUMENTZa" },  // Link 2 (aSPARKa now has 2 targets = TRIAD)
+        { src: "aPRYZMa", dst: "aLUMENTZa" }   // Link 3 (Isolated Diad)
+    ];
+
+    const involvedOrbIDs = new Set();
+
+    // 4. DRAW DIADZA (Gold Cylinders)
+    CALIBRATION_GRAPH.forEach(edge => {
+        let srcOrb = null, dstOrb = null;
+        let srcID = null, dstID = null;
+
+        // Find Orb Data in Scene
+        for(const [id, s] of spheres) {
+            if(s.txt === edge.src) { srcOrb = s; srcID = id; }
+            if(s.txt === edge.dst) { dstOrb = s; dstID = id; }
+        }
+
+        if(srcOrb && dstOrb) {
+            involvedOrbIDs.add(srcID);
+            involvedOrbIDs.add(dstID);
+
+            // Cylinder Logic
+            const p1 = new THREE.Vector3(srcOrb.x, srcOrb.y, srcOrb.z);
+            const p2 = new THREE.Vector3(dstOrb.x, dstOrb.y, dstOrb.z);
+            const dir = new THREE.Vector3().subVectors(p2, p1);
+            
+            const geo = new THREE.CylinderGeometry(0.05, 0.05, dir.length(), 8);
+            const mat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent:true, opacity:0.8 });
+            const cyl = new THREE.Mesh(geo, mat);
+            
+            cyl.position.copy(p1).add(dir.multiplyScalar(0.5));
+            cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
+            manifoldGroup.add(cyl);
+        }
+    });
+
+    // 5. DRAW TRIADZA (Transparent Webs)
+    // Build local adjacency
+    const adj = {};
+    CALIBRATION_GRAPH.forEach(e => {
+        if(!adj[e.src]) adj[e.src] = [];
+        adj[e.src].push(e.dst);
+    });
+
+    for(const [srcName, targets] of Object.entries(adj)) {
+        let srcOrb = null;
+        for(const [id, s] of spheres) { if(s.txt === srcName) srcOrb = s; }
+
+        if(srcOrb && targets.length >= 2) {
+            // Create Triangle Fan
+            const p0 = new THREE.Vector3(srcOrb.x, srcOrb.y, srcOrb.z);
+            const tOrbs = targets.map(name => {
+                for(const [id, s] of spheres) if(s.txt === name) return s;
+            }).filter(x=>x);
+
+            for(let i=0; i<tOrbs.length-1; i++) {
+                const p1 = new THREE.Vector3(tOrbs[i].x, tOrbs[i].y, tOrbs[i].z);
+                const p2 = new THREE.Vector3(tOrbs[i+1].x, tOrbs[i+1].y, tOrbs[i+1].z);
+                
+                const geom = new THREE.BufferGeometry().setFromPoints([p0, p1, p2]);
+                const mat = new THREE.MeshBasicMaterial({ 
+                    color: srcOrb.originalColor || 0x00FFFF, 
+                    side: THREE.DoubleSide, transparent:true, opacity:0.2 
+                });
+                manifoldGroup.add(new THREE.Mesh(geom, mat));
+                
+                // Wireframe Outline
+                const edges = new THREE.EdgesGeometry(geom);
+                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xFFFFFF, opacity:0.3 }));
+                manifoldGroup.add(line);
+            }
+        }
+    }
+
+    // 6. SHOW TOOLTIPS & HIGHLIGHT
+    involvedOrbIDs.forEach(id => {
+        const sphere = scene.getObjectById(parseInt(id));
+        if(sphere) {
+            // A. Highlight Orb (Blue)
+            select_ORB_SYSTEM1(sphere, { method: 'MANIFOLD_PAINT' });
+            
+            // B. Add Permanent Label (Tooltip)
+            const txt = spheres.get(id).txt;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = 'Bold 24px monospace';
+            const w = ctx.measureText(txt).width + 20;
+            canvas.width = w; canvas.height = 40;
+            
+            // Draw Label Background
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            ctx.fillRect(0,0,w,40);
+            ctx.strokeStyle = 'lime';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(0,0,w,40);
+            
+            // Draw Text
+            ctx.fillStyle = 'lime';
+            ctx.font = 'Bold 24px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(txt, w/2, 20);
+            
+            const tex = new THREE.Texture(canvas);
+            tex.needsUpdate = true;
+            
+            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent:true }));
+            sprite.position.copy(sphere.position).add(new THREE.Vector3(0, 1.2, 0));
+            sprite.scale.set(w/20, 2, 1); // Approx scale
+            manifoldGroup.add(sprite);
+        }
+    });
+
+    // 7. RENDER VAX HULL (Context)
+    // paintVAXHull();
+};
+    
+            // function paintVAXHull() {
+            //     // Points from VARZ (Spike Tips)
+            //     // Y: (0,10,0), (0,-10,0) | X: (10,0,0), (-10,0,0) | Z: (0,0,10), (0,0,-10)
+            //     const top = new THREE.Vector3(0, 10, 0);
+            //     const bot = new THREE.Vector3(0, -10, 0);
+            //     const right = new THREE.Vector3(10, 0, 0);
+            //     const left = new THREE.Vector3(-10, 0, 0);
+            //     const front = new THREE.Vector3(0, 0, 10);
+            //     const back = new THREE.Vector3(0, 0, -10);
+
+            //     const vaxPoints = [
+            //         [top, right, front], [top, front, left], [top, left, back], [top, back, right],
+            //         [bot, right, front], [bot, front, left], [bot, left, back], [bot, back, right]
+            //     ];
+
+            //     vaxPoints.forEach(tri => {
+            //         const geom = new THREE.BufferGeometry().setFromPoints(tri);
+            //         const mat = new THREE.MeshBasicMaterial({ 
+            //             color: 0x444444, // Dark Grey "Container"
+            //             transparent: true, 
+            //             opacity: 0.05, 
+            //             side: THREE.DoubleSide,
+            //             wireframe: false
+            //         });
+            //         const mesh = new THREE.Mesh(geom, mat);
+            //         manifoldGroup.add(mesh);
+                    
+            //         // VAX Grid Lines
+            //         const edges = new THREE.EdgesGeometry(geom);
+            //         const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x444444, opacity:0.3, transparent:true }));
+            //         manifoldGroup.add(line);
+            //     });
+            // }
+            // ------ END MANIFOLD PAINTER
+
+    // Helper to toggle visibility
+    window.toggleAxisSpire = function(isChecked) {
+        if (window.axisSpireGroup) {
+            window.axisSpireGroup.visible = isChecked;
+        }
+    };
+    
+    // Helper to toggle label visibility
+    window.toggleAxisLabels = function(isChecked) {
+        if (window.axisLabelGroup) {
+            window.axisLabelGroup.visible = isChecked;
+            // If showing labels, make sure they are updated
+            if (isChecked && window.updateAxisLabels) window.updateAxisLabels();
+        }
+    };
+
+    // *** PIN_DOTZ TOGGLE (Spatial Compression) ***
+    window.isPinned = false; // Global State
+    // *** PIN_DOTZ TOGGLE (Spatial Compression) ***
+    window.isPinned = false; // Global State
+    window.togglePINDOTZ = function() {
+        window.isPinned = document.getElementById('PIN_DOTZ_CHECKBOX').checked;
+        console.log(`PIN_DOTZ TOGGLED: ${window.isPinned}`);
+
+        spheres.forEach((data, id) => {
+            const sphere = scene.getObjectById(id);
+            if (sphere) {
+                const isSelected = selectedOrbs.has(id);
+                // If pinned AND NOT selected -> Shrink
+                if (window.isPinned && !isSelected) {
+                    // PIN MODE: Make Small
+                    sphere.scale.set(0.33, 0.33, 0.33);
+                    sphere.material.opacity = 0.5; 
+                } else {
+                    // ORB MODE (or Selected): Restore Original
+                    if (data.originalScale) sphere.scale.copy(data.originalScale);
+                    else sphere.scale.set(1, 1, 1);
+                    
+                    if (data.originalOpacity) sphere.material.opacity = data.originalOpacity;
+                    else sphere.material.opacity = 0.8;
+                }
+            }
+        });
+    };
+
+
+    // Helper to update axis labels
+    window.updateAxisLabels = function() {
+        // Get values from selectors
+        const vaxX = document.getElementById('VAX_X_SELECTOR').value.split('|');
+        const vaxY = document.getElementById('VAX_Y_SELECTOR').value.split('|');
+        const vaxZ = document.getElementById('VAX_Z_SELECTOR').value.split('|');
+
+        // Map of axis keys to their new text values
+        // x_pos = Right/East = First value of X? No, typically +X is Right. 
+        // Let's assume VAL1 is positive/right/up/front logic, VAL2 is negative/left/down/back logic.
+        // Wait, based on standard strings: EN|DIS -> Encourage (Positive?) | Discourage (Negative?)
+        // Usually +X is Right. Let's map VAL1 to Positive side, VAL2 to Negative side.
+        
+        const updates = {
+            'x_pos': vaxX[0], // East
+            'x_neg': vaxX[1], // West
+            'y_pos': vaxY[0], // Up
+            'y_neg': vaxY[1], // Down
+            'z_pos': vaxZ[0], // South/Front (ThreeJS +Z is usually towards camera/screen) -> "NEAR"? 
+            'z_neg': vaxZ[1]  // North/Back (-Z into screen) -> "FAR"?
+        };
+        
+        // Correction on Z: 
+        // Default options: RECENT|ANCIENT, NEAR|FAR, CORE|EDGE
+        // +Z is typically towards the viewer. -Z is away.
+        // "RECENT" vs "ANCIENT". "NEAR" vs "FAR".
+        // I will assume the first value corresponds to +Z and second to -Z for consistency, 
+        // but if the labels look swapped we can flip indices.
+
+        for (const [key, text] of Object.entries(updates)) {
+            if (window.axisSprites[key]) {
+                    const newTex = custom_getLabelTexture(text, 'aqua');
+                    window.axisSprites[key].material.map = newTex;
+                    window.axisSprites[key].material.needsUpdate = true;
+            }
+        }
+    };
+
+            // function add_Manifold_1() {
+            //     // debugger;
+            //     const targetWords = ["aZEPTZa", "aFACTZa", "aFALZa"];
+            //     const foundPoints = [];
+
+            //     // Find positions of target words
+            //     for (const data of spheres.values()) {
+            //         if (targetWords.includes(data.txt)) {
+            //             foundPoints.push(new THREE.Vector3(data.x, data.y, data.z));
+            //             console.log("Found point:", data.txt, data.x, data.y, data.z);
+            //         }
+            //     }
+
+            //     if (foundPoints.length >= 3) {
+            //         const geometry = new THREE.BufferGeometry().setFromPoints(foundPoints);
+            //         // Compute normals for proper lighting/visibility (though BasicMaterial doesn't strictly need them, it helps if we switch materials)
+            //         geometry.computeVertexNormals();
+
+            //         // To make a solid triangle, we need indices or just 3 vertices. setFromPoints with 3 vectors creates one triangle.
+
+            //         const material = new THREE.MeshBasicMaterial({
+            //             color: 0xFFFF00, // Yellow
+            //             transparent: false,
+            //             opacity: 1.0,
+            //             side: THREE.DoubleSide
+            //         });
+            //         const plane = new THREE.Mesh(geometry, material);
+            //         scene.add(plane);
+            //         console.log("Manifold added connecting:", targetWords);
+            //     } else {
+            //         console.warn("Could not find all manifold points:", targetWords, "Found:", foundPoints.length);
+            //     }
+            // }
+            // add_Manifold_1();
+
+    // --- ANIMATION STATE CONTROL ____________________________
+    window.isPulseAnimating = false;
+    window.togglePulse = function () {
+        window.isPulseAnimating = !window.isPulseAnimating;
+        const btn = document.getElementById('anim8Btn1');
+        if (btn) {
+            btn.style.boxShadow = window.isPulseAnimating ? "0 0 20px #39FF14" : "none";
+            btn.innerHTML = window.isPulseAnimating ? "✨ PULSING" : "💎 ANIM8";
+        }
+        console.log("Animation Pulse State:", window.isPulseAnimating);
+    };
+    // **** --- INITIALIZE SUGARCUBE VIZUALIZATION ---- ****
+    camera.position.set(15, 15, 15);
+    camera.lookAt(0, 0, 0);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        if (window.isPulseAnimating) {
+            const time = Date.now() * 0.003; // Speed of pulse
+            scene.children.forEach(obj => {
+                if (obj.isMesh && obj.userData && obj.userData.strata) {
+                    // Respect PIN_DOTZ and Stratum, BUT skip Selected Orbs
+                    const isSelected = selectedOrbs.has(obj.id);
+                    const effectivePinned = window.isPinned && !isSelected;
+                    
+                    const baseScale = effectivePinned ? 0.33 : 1.0; 
+                    const pulseAmp = effectivePinned ? 0.03 : 0.15; // Subtle pulse for dots
+                    
+                    const pulse = baseScale + pulseAmp * Math.sin(time + (obj.position.x * 0.5));
+                    obj.scale.set(pulse, pulse, pulse);
+                    
+                    // Dynamic Opacity Shift
+                    if (obj.material) {
+                         const baseOpacity = obj.userData.strata === "CORE" ? 0.8 : 0.4;
+                         // Reduce opacity fluctuation for dots
+                         obj.material.opacity = effectivePinned ? baseOpacity : baseOpacity * (pulse * 0.8);
+                    }
+                }
+            });
+        } else {
+            // Reset state when animation is off
+            // BUT RESPECT PINNED STATE AND SELECTED STATE
+            scene.children.forEach(obj => {
+                if (obj.isMesh && obj.userData && obj.userData.strata) {
+                     const isSelected = selectedOrbs.has(obj.id);
+                     const effectivePinned = window.isPinned && !isSelected;
+                     
+                     if (effectivePinned) {
+                         obj.scale.set(0.33, 0.33, 0.33);
+                         if (obj.material) obj.material.opacity = 0.5;
+                     } else {
+                         // Restore Original (or standard size)
+                         obj.scale.set(1, 1, 1);
+                         if (obj.material) {
+                            obj.material.opacity = obj.userData.strata === "CORE" ? 0.8 : 0.4;
+                         }
+                     }
+                }
+            });
+        }
+
+        renderer.render(scene, camera);
+    }
+    animate(); // Start the loop
+
+    // *******--- Interaction --- ***************************//
+    function onClick(event) { // listens on rendered canvas
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true); // True for recursive (check groups)
+        if (intersects.length > 0) {
+            const clickedSphere = intersects[0].object;
+            
+            // CHECK FOR ANCHOR CLICK
+            if (clickedSphere.userData && clickedSphere.userData.type === 'ANCHOR') {
+                printSubCubeWords(clickedSphere.userData);
+                return; // Stop processing other clicks
+            }
+
+            const pointData = spheres.get(clickedSphere.id);
+            if (pointData) {
+                console.log(`Clicked point: ${pointData.txt} (position: x=${pointData.x}, y=${pointData.y}, z=${pointData.z})`);
+                if (window.NET_SELECT) { // --- NET SELECT LOGIC ---
+                    show_META_NETS(clickedSphere);
+                }
+                const isSelected = selectedOrbs.has(clickedSphere.id);
+                if (isSelected) { //NORMAL / MULTI SELECT LOGIC ---
+                    deselect_ORB_SYSTEM(clickedSphere.id); // Always allow toggling OFF individually
+                } else {  // If NOT already selected:
+                    if (!window.MULTI_SELECT) { // If Multi-Select is OFF, clear everything else first
+                        deselect_ORB_SYSTEM(); // No ID means clear all
+                    } // Select the new one
+                    select_ORB_SYSTEM1(clickedSphere, { primary_selection: true, secondary_selection: false, tertiary_selection: false });
+                    if (window.NET_SELECT) { // --- NET SELECT LOGIC ---
+                        show_META_NETS(clickedSphere);
+                    }
+                }
+            }
+        }
+    }
+
+    function custom_getLabelTexture(text, colorStr = 'aqua') {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        // measure text
+        ctx.font = 'Bold 20px monospace';
+        const metrics = ctx.measureText(text);
+        const w = Math.ceil(metrics.width) + 20;
+        const h = 40;
+        const r = 10; // corner radius
+        canvas.width = w;
+        canvas.height = h;
+
+        // Redraw with rounded rect
+        ctx.font = 'Bold 20px monospace';
+        
+        ctx.beginPath();
+        ctx.moveTo(r, 0);
+        ctx.lineTo(w - r, 0);
+        ctx.quadraticCurveTo(w, 0, w, r);
+        ctx.lineTo(w, h - r);
+        ctx.quadraticCurveTo(w, h, w - r, h);
+        ctx.lineTo(r, h);
+        ctx.quadraticCurveTo(0, h, 0, h - r);
+        ctx.lineTo(0, r);
+        ctx.quadraticCurveTo(0, 0, r, 0);
+        ctx.closePath();
+        
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent black bg
+        ctx.fill();
+        
+        ctx.strokeStyle = colorStr;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = colorStr;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, w / 2, h / 2);
+        const tex = new THREE.Texture(canvas);
+        tex.needsUpdate = true;
+        return tex;
+    }
+
+    function show_META_NETS(sourceSphere) {
+        console.log("show_META_NETS called for:", sourceSphere.userData.word);
+        if (!window.MULTI_SELECT) { // 1. Cleanup previous nets IF NOT Multi-Select
+            activeNetVisuals.forEach(item => {
+                scene.remove(item.object);
+                if (item.object.geometry) item.object.geometry.dispose();
+            });
+            activeNetVisuals.length = 0; // Clear array
+        }
+        const srcWord = sourceSphere.userData.word;
+        const sourceId = sourceSphere.id;
+        // 2. Find connections (Both Incoming and Outgoing)
+        const connections = all_GRAPHZ.filter(edge => edge.src === srcWord || edge.dst === srcWord);
+        if (connections.length === 0) {
+            console.log("No connections found for", srcWord);
+            return;
+        }
+        console.log(`Found ${connections.length} connections.`);
+        // Helper to track label counts per target to stack them
+        const labelsPerTarget = new Map(); // targetId -> count
+        // 3. Draw Lines and Labels
+        connections.forEach(edge => {
+            // Determine the "Other" sphere
+            const isOutgoing = edge.src === srcWord;
+            const otherWord = isOutgoing ? edge.dst : edge.src;
+            // Find "Other" sphere object
+            let otherSphereId = null;
+            let otherData = null;
+            for (const [id, data] of spheres.entries()) {
+                if (data.txt === otherWord) {
+                    otherSphereId = id;
+                    otherData = data;
+                    break;
+                }
+            }
+            if (otherData) {
+                const otherSphere = scene.getObjectById(otherSphereId);
+                // A. Draw Line
+                // Directional Logic:
+                // If Outgoing: Source -> Other
+                // If Incoming: Other -> Source
+                // We'll draw a simple line, maybe add arrow logic later or color code.
+                // For now, Gold for all.
+                const points = [];
+                points.push(sourceSphere.position.clone());
+                points.push(otherSphere.position.clone());
+                // Optional: Different color for incoming vs outgoing?
+                // Outgoing = Gold (0xFFD700)
+                // Incoming = Cyan/Orange? Let's keep it Gold for uniformity as requested "Net Select".
+                const dir = new THREE.Vector3().subVectors(otherSphere.position, sourceSphere.position);
+                const length = dir.length();
+                const halfLength = length / 2;
+                const cylinderGeo = new THREE.CylinderGeometry(0.05, 0.05, length, 8);
+                const lineMat = new THREE.MeshBasicMaterial({
+                    color: isOutgoing ? 0xFFD700 : 0xFFA500, // Gold for Out, Orange for In
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const line = new THREE.Mesh(cylinderGeo, lineMat);
+                // Positioning Cylinder correctly between two points
+                const midpoint = new THREE.Vector3().addVectors(sourceSphere.position, otherSphere.position).multiplyScalar(0.5);
+                line.position.copy(midpoint);
+                line.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+                scene.add(line);
+                activeNetVisuals.push({ type: 'line', object: line, sourceId: sourceId });
+                // B. Show Label on "Other" Sphere
+                // If Outgoing: "Rel -> Me"
+                // If Incoming: "Other --Rel--> Me" ??
+                const labelText = `${edge.src} --[${edge.rel}]--> ${edge.dst}`;
+                const labelColor = isOutgoing ? '#FFD700' : '#FFA500';
+                const labelTex = custom_getLabelTexture(labelText, labelColor);
+                const spriteMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true });
+                const sprite = new THREE.Sprite(spriteMat);
+                // Stack Logic
+                const currentCount = labelsPerTarget.get(otherSphereId) || 0;
+                labelsPerTarget.set(otherSphereId, currentCount + 1);
+                const stackOffset = currentCount * 0.6; // Vertical spacing
+                // Position sprite above OtherSphere
+                sprite.position.copy(otherSphere.position);
+                sprite.position.y += 1.5 + stackOffset; // Base offset + stack
+                sprite.scale.set(6, 1.5, 1); // Adjust scale
+                scene.add(sprite);
+                activeNetVisuals.push({ type: 'sprite', object: sprite, sourceId: sourceId });
+            } else {
+                console.warn(`Connected orb '${otherWord}' not found in scene.`);
+            }
+        });
+    }
+    renderer.domElement.addEventListener('click', onClick, false);
+
+    function updateDashboardFromSelection() {
+        const dashboard = document.getElementById('DASHBOARD_textarea');
+        if (!dashboard) return;
+        if (selectedOrbs.size === 0) {
+            dashboard.innerText = "";
+            return;
+        }
+        let displayText = "";
+        let index = 1;
+        selectedOrbs.forEach((value, id) => {
+            const sphere = scene.getObjectById(id);
+            if (sphere) {
+                const txt = sphere.userData.word || "N/A";
+                const strata = sphere.userData.strata || "N/A";
+                const pos = sphere.position;
+                displayText += `[${index}] SELECTED ORB: ${txt} (${strata})\n`;
+                displayText += `    POS: (${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)})\n`;
+                displayText += `----------------------------------------\n`;
+                index++;
+            }
+        });
+        dashboard.innerText = displayText;
+    }
+
+    function select_ORB_SYSTEM1(sphere, params) {
+        console.log("select_ORB_SYSTEM1 called with:", params);
+        if (sphere && !selectedOrbs.has(sphere.id)) {
+            // Start from *current* scale (which might include Strata Zoom)
+            sphere.scale.multiplyScalar(1.1); 
+            sphere.material.color.setHex(0x96DED1); // Bird Egg Blue
+            sphere.material.opacity = 1.0;
+            sphere.material.transparent = false; // Ensure full opacity
+            // Add Glow
+            const map = getGlowTexture();
+            const material = new THREE.SpriteMaterial({ map: map, color: 0x96DED1, transparent: true, blending: THREE.AdditiveBlending });
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(0.6, 0.6, 1.0);
+            sprite.position.copy(sphere.position);
+            scene.add(sprite);
+            // Track selection
+            selectedOrbs.set(sphere.id, { sprite: sprite });
+            updateDashboardFromSelection();
+        }
+    }
+
+    function deselect_ORB_SYSTEM(targetId = null) {
+        console.log("deselect_ORB_SYSTEM called, target:", targetId);
+        const idsToDeselect = targetId ? [targetId] : Array.from(selectedOrbs.keys());
+        idsToDeselect.forEach(id => {
+            const sphere = scene.getObjectById(id);
+            const data = spheres.get(id);
+            const selectionData = selectedOrbs.get(id);
+            // Restore Orb Visuals
+            if (sphere && data) {
+                // Remove from tracking
+                selectedOrbs.delete(id);
+                // 1. Restore Defaults First
+                if (data.originalColor !== undefined) sphere.material.color.setHex(data.originalColor);
+                if (data.originalOpacity !== undefined) sphere.material.opacity = data.originalOpacity;
+                if (data.originalScale !== undefined) sphere.scale.copy(data.originalScale);
+                sphere.material.transparent = true; // Restore transparency
+                if (selectionData && selectionData.sprite) {
+                    scene.remove(selectionData.sprite);
+                }
+                // 2. Check if Stratum is Active (and re-apply Visuals if so)
+                if (window.activeStrata && window.activeStrata[data.strata]) {
+                    // Visual Specs
+                    let scaleVal = 1.0;
+                    let opacityVal = 0.5;
+                    if (data.strata === "CORE") { scaleVal = 0.5; opacityVal = 0.9; }
+                    else if (data.strata === "AURA") { scaleVal = 2.5; opacityVal = 0.6; }
+                    else if (data.strata === "AERO") { scaleVal = 1.5; opacityVal = 0.5; }
+                    sphere.scale.set(scaleVal, scaleVal, scaleVal);
+                    sphere.material.opacity = opacityVal;
+                    // Ensure transparency is set again just in case opacity implies it
+                    sphere.material.transparent = true;
+                    if (!sphere.userData.glowSprite) {
+                        const map = getGlowTexture();
+                        const material = new THREE.SpriteMaterial({
+                            map: map,
+                            color: sphere.material.color,
+                            transparent: true,
+                            blending: THREE.AdditiveBlending
+                        });
+                        const sprite = new THREE.Sprite(material);
+                        sprite.scale.set(1.5, 1.5, 1.0);
+                        sprite.position.copy(sphere.position);
+                        scene.add(sprite);
+                        sphere.userData.glowSprite = sprite;
+                    }
+                } else {
+                    // Ensure glow is gone if not active
+                    if (sphere.userData.glowSprite) {
+                        scene.remove(sphere.userData.glowSprite);
+                        sphere.userData.glowSprite = null;
+                    }
+                }
+            }
+        });
+        // --- CLEANUP NET VISUALS ---
+        if (targetId) {  // Remove just this orb's nets
+            for (let i = activeNetVisuals.length - 1; i >= 0; i--) {
+                const item = activeNetVisuals[i];
+                if (item.sourceId === targetId) {
+                    scene.remove(item.object);
+                    if (item.object.geometry) item.object.geometry.dispose();
+                    activeNetVisuals.splice(i, 1);
+                }
+            }
+        } else {  // Remove ALL nets
+            activeNetVisuals.forEach(item => {
+                scene.remove(item.object);
+                if (item.object.geometry) item.object.geometry.dispose();
+            });
+            activeNetVisuals.length = 0;
+        }
+        updateDashboardFromSelection();
+    }
+
+    function onMouseMove(event) {
+        event.preventDefault();
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        if (intersects.length > 0) {
+            const object = intersects[0].object;
+            
+            // CHECK FOR ANCHOR HOVER
+            if (object.userData && object.userData.type === 'ANCHOR') {
+                    document.body.style.cursor = 'pointer';
+                    // Optional: Tooltip for anchor
+                    if (hoveredSphereId !== object.id) {
+                    hoveredSphereId = object.id;
+                    tooltip.style.display = 'block';
+                    tooltip.textContent = "SUBCUBE: " + object.userData.lbl;
+                    tooltip.style.left = event.pageX + 10 + 'px';
+                    tooltip.style.top = event.pageY + 10 + 'px';
+                    }
+                    return;
+            }
+
+            const data = spheres.get(object.id);
+            if (data && data.txt) {
+                if (hoveredSphereId !== object.id) {
+                    hoveredSphereId = object.id;
+                    tooltip.style.display = 'block';
+                    tooltip.textContent = data.txt;
+                }
+                // Update position
+                tooltip.style.left = event.pageX + 10 + 'px';
+                tooltip.style.top = event.pageY + 10 + 'px';
+                document.body.style.cursor = 'pointer';
+            } else {
+                // Reset if hovering something else (like line/sprite without data)
+                    if (hoveredSphereId !== null) {
+                    hoveredSphereId = null;
+                    tooltip.style.display = 'none';
+                    document.body.style.cursor = 'default';
+                }
+            }
+        } else {
+            if (hoveredSphereId !== null) {
+                hoveredSphereId = null;
+                tooltip.style.display = 'none';
+                document.body.style.cursor = 'default';
+            }
+        }
+    }
+    renderer.domElement.addEventListener('mousemove', onMouseMove, false);
+
+    function onWindowResize() {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+    window.addEventListener('resize', onWindowResize, false);
+
+    // --- STRATA TOGGLES ---
+    window.toggleStrataGlow = function (targetStrata, isActive) {
+        console.log(`toggleStrataGlow: ${targetStrata} = ${isActive}`);
+        // Update State
+        if (window.activeStrata) {
+            window.activeStrata[targetStrata] = isActive;
+        }
+        let count = 0;
+        spheres.forEach((data, id) => {
+            const sphere = scene.getObjectById(id);
+            if (sphere && sphere.userData && sphere.userData.strata === targetStrata) {
+                // SKIP if currently selected (Selection overrides Strata Toggle)
+                if (selectedOrbs.has(id)) return;
+                count++;
+                if (isActive) {
+                    // Active State: Apply Visuals (Scale, Opacity, Glow)
+                    // 1. Scale & Opacity
+                    // Specs: CORE(6x, 0.9), AURA(3.5x, 0.6), AERO(1.5x, 0.5)
+                    let scaleVal = 1.0;
+                    let opacityVal = 0.5;
+                    if (targetStrata === "CORE") { scaleVal = 0.5; opacityVal = 0.9; }
+                    else if (targetStrata === "AURA") { scaleVal = 2.5; opacityVal = 0.6; }
+                    else if (targetStrata === "AERO") { scaleVal = 1.5; opacityVal = 0.5; }
+                    sphere.scale.set(scaleVal, scaleVal, scaleVal);
+                    sphere.material.opacity = opacityVal;
+                    // 2. Glow Sprite
+                    if (!sphere.userData.glowSprite) {
+                        const map = getGlowTexture();
+                        const material = new THREE.SpriteMaterial({
+                            map: map,
+                            color: sphere.material.color,
+                            transparent: true,
+                            blending: THREE.AdditiveBlending
+                        });
+                        const sprite = new THREE.Sprite(material);
+                        sprite.scale.set(1.5, 1.5, 1.0);
+                        sprite.position.copy(sphere.position);
+                        scene.add(sprite);
+                        sphere.userData.glowSprite = sprite;
+                    }
+                } else {
+                    // Inactive State: Revert to Originals
+                    if (data.originalScale) sphere.scale.copy(data.originalScale);
+                    if (data.originalOpacity) sphere.material.opacity = data.originalOpacity;
+                    // Remove Glow Sprite
+                    if (sphere.userData.glowSprite) {
+                        scene.remove(sphere.userData.glowSprite);
+                        sphere.userData.glowSprite = null;
+                    }
+                }
+            }
+        });
+        console.log(`toggleStrataGlow: Modified ${count} orbs for strata ${targetStrata}`);
+    };
+} //END initVIZ.
+initVIZ(); // Init plot.
+
+window.refreshVIZ = function(event) {
+    console.log("refreshVIZ: SUGARCUBE, started...");
+    initVIZ();
+}
+</script>
+<script> //****************IMPORT _default_ DATA-MODULE******************
+        // INTERACTIVE LOCAL STORAGE DATA MODEL.
+        // let _default_MEMZ_DATA_MAP_Monthly = default_MEMZ_DATA_MAP_Monthly
+        // let _default_GEMZ_DATA_MAP_Monthly = default_GEMZ_DATA_MAP_Monthly
+        // let _default_ALPHABITZA_DATA_MAP = default_ALPHABITZA_DATA_MAP
+</script> <!-- **************************END-CUSTOM-DATA-MODULE******************-->
+<style>
+body {
+    background: black;
+    color: steelblue;
+    font-size: 1em;
+    padding: 1em 2% 2% 2%;
+    font-family: verdana;
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: 2em;
+    user-select: none;
+}
+.FRAME {
+    border: solid 1px steelblue;
+    box-shadow: 1px 1px 3px 0px steelblue;
+    border-radius: 10px;
+    padding: 2%;
+    margin: 0.333em;
+}
+.BTN {
+    color: aqua;
+    background: #000033;
+    border: solid 1px seagreen;
+    text-align: center;
+    border-radius: 13px;
+    box-shadow: 1px 1px 1px teal;
+    cursor: pointer;
+    height: 1.444em;
+}
+.BTN:hover {
+    color: lime;
+    border: solid 1px lime;
+    box-shadow: 1px 1px 1px black;
+}
+.BTN:active {
+    color: cyan;
+    background: blue;
+    border: solid 1px teal;
+    box-shadow: 1px 1px 1px black;
+    height: 1.444em;
+}
+.BTN.selectedMAINBTN {
+    color: cyan;
+    background: darkblue;
+    border: solid 1px teal;
+}
+.blackBTN.selectedSUBBTN {
+    color: cyan;
+    box-shadow: inset 1px 1px 12px 0px blue;
+    border: solid 1px teal;
+}
+/* BTN *******BTN**************************/
+.blackBTN {
+    background-color: #000;
+    color: #39FF14;
+    border: 1px solid #39FF14;
+    padding: 10px 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    text-shadow: 0 0 5px #39FF14;
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+.blackBTN:hover {
+    background-color: steelblue;
+    color: #000 !important;
+    box-shadow: 0 0 15px lightblue;
+}
+.blackBTN:active {
+    border: 2px solid steelblue;
+    background: black;
+    color: purple
+}
+@media only screen and (max-width: 800px) {
+    /************* TABLET */
+    body {
+        background-color: #00070d;
+    }
+    .BTN {
+        font-size: 1.111em;
+    }
+}
+@media only screen and (max-width: 600px) {
+    /************* PHONE */
+    body {
+        background-color: #07000c;
+    }
+    .BTN {
+        font-size: 1em;
+    }
+    .blackBTN {
+        font-size: 0.888em;
+    }
+}
+/* *****CUSTOM SCROLLBAR****************************/
+.scrollBarV {
+    overflow-x: scroll;
+}
+.scrollBarV::-webkit-scrollbar-track {
+    background-color: #010213;
+    border-radius: 13px;
+}
+.scrollBarV::-webkit-scrollbar {
+    width: 0.666em;
+    height: 100%;
+}
+.scrollBarV::-webkit-scrollbar-thumb {
+    background-color: #04223c;
+    border-radius: 13px;
+    background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 26%, transparent 26%, transparent 51%, rgba(255, 255, 255, -0.4) 51%, rgba(255, 255, 255, 0.6) 74%, transparent 74%, transparent);
+}
+.scrollBarH {
+    overflow-y: scroll;
+}
+.scrollBarH::-webkit-scrollbar-track {
+    background-color: #010213;
+    border-radius: 13px;
+}
+.scrollBarH::-webkit-scrollbar {
+    height: 0.666em;
+    width: 100%;
+}
+.scrollBarH::-webkit-scrollbar-thumb {
+    background-color: #04223c;
+    border-radius: 13px;
+}
+
+/*******CUSTOM MAIN MENU *******************MAIN MENU*********************************/
+.MAIN_MENU {
+    background: rgb(72, 80, 111);
+    border: solid 1px rgb(0, 128, 45);
+    border-radius: 13px;
+    padding: 0.666em 1em 0.666em 1em;
+    box-shadow: inset 0px 3px 10px purple;
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 80%;
+    margin: -1em auto 1.111em auto;
+    font-size: 0.666em;
+    padding: 0.444em;
+    display: flex;
+    flex: 0;
+}
+.hiddenTab {
+    display: none !important;
+}
+/* CUSTOM HR ***************************HR***********************/
+hr {
+    border-top: solid 1px steelblue;
+    border-bottom: none;
+    border-radius: 2px;
+}
+/* CUSTOM TITLES ***************************TITLES***********************/
+.mainTitle {
+    font-size: 1.444em;
+    display: flex;
+    justify-content: space-between;
+    padding: 0em 1em 0 1em;
+    text-shadow: -8px -1px 8px blue;
+}
+/* CUSTOM EXPANDER ***************************EXPANDER***********************/
+.expanderROW {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #021d33;
+    padding: 0.222em 0em 0.333em 0em;
+    margin: 0 2% 0.333em 2%;
+}
+.expanderTITLE {
+    font-size: 0.888em;
+    color: steelblue;
+    font-weight: bold;
+}
+.expanderBTN {
+    color: aqua;
+    background: #000033;
+    border: solid 1px seagreen;
+    width: 1.444em;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 1px 1px 1px teal;
+    cursor: pointer;
+    height: 1.444em;
+}
+.expanderBTN:hover {
+    color: cyan;
+    background: darkblue;
+    border: solid 1px teal;
+}
+.expanderBTN:active {
+    color: cyan;
+    background: blue;
+    border: solid 1px teal;
+    box-shadow: 1px 1px 1px black;
+}
+/** END CUSTOM EXPANDER ******************END EXPANDER*********************************************/
+/***********************CUSTOM -CHECKBOXES****************/
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 0px solid blue;
+    border-radius: 44%;
+    background-color: black;
+    cursor: pointer;
+    border: 2px solid purple;
+    background-color: #000;
+    color: aqua;
+    margin-left: 2em;
+}
+input[type="checkbox"]:after {
+    border: 2px solid #0fd05f;
+    border-radius: 3px;
+    background-color: #000;
+    border-radius: 44%;
+    color: aqua;
+    width: 20px;
+    padding: 0 0.111em 0 0.111em;
+    margin: -1px 0 0 -1px;
+}
+input[type="checkbox"]:checked {
+    content: '\2714';   /* Checkmark character */
+    width: 20px;
+    border: 2px solid #0fd05f;
+    border-radius: 44%;
+    background-color: #000;
+    color: aqua;
+}
+input[type="checkbox"]:checked:after {
+    content: '\2714';    /* Checkmark character */
+    width: 20px;
+    background-color: blue;
+    border: 2px solid #0fd05f;
+    border-radius: 44%;
+    background-color: #000;
+    color: aqua;
+}
+/**********************************CUSTOM SELECTOR *********************/
+.subSELECTOR{
+    background: black;
+    border: steelblue;
+    color: steelblue;
+    box-shadow: 1px 1px 1px lightblue;
+    border-radius: 18px;
+    padding: 0.666em 16px;
+    transition: all 0.3s ease;
+}
+.subSELECTOR:hover{
+    border: 1px solid cyan;
+    box-shadow: 0 0 8px cyan;
+    cursor: pointer;
+    color: cyan;
+}
+.subSELECTOR:focus{
+    outline: none;
+    border: 1px solid #39FF14;
+    box-shadow: 0 0 12px #39FF14;
+    color: #39FF14;
+}
+/** CUSTOM API ENTRY***************************************************************/
+#API_BOX {
+    display: flex;
+    border: solid 1px steelblue;
+    border-radius: 13px;
+    padding: 2px 10%;
+    color: #022e64;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 12px auto 1.666em auto;
+    max-width: 30em;
+    min-width: 50%;
+}
+@media only screen and (max-width: 800px) {
+    /************* TABLET */
+    #API_BOX {
+        margin: 8px 10% 1em 10%;
+    }
+}
+@media only screen and (max-width: 600px) {
+    /************* PHONE */
+    #API_BOX {
+        margin: 0 0 1em 0;
+        padding: 0;
+    }
+}
+.EXPANDER_Item {
+    box-shadow: inset 1px 1px 8px aqua;
+    border-radius: 22px;
+    padding: 1em;
+}
+.mainDIVIDER {
+    margin: 1em;
+    box-shadow: 9px 6px 2px aqua;
+}
+/* ************* CUSTOM MOBILE ***********************/
+@media only screen and (max-width: 600px) {
+    /************* PHONE */
+    body {
+        margin-left: 2px;
+        margin-right: 2px;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    #TEST_VIEW {
+        margin-left: 2px !important;
+        margin-right: 2px !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+        width: 98% !important;
+    }
+    .MOBILE_Box_Sizer {
+        /*.BOOKFRAME{*/
+        margin-left: 6px !important;
+        margin-right: 6px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+    .DisplayCANVAS {
+        margin: 1em !important;
+    }
+}
+</style>
+</head>
+<body class="scrollBarV">
+    <header style="position:absolute;top:0.555em;align-self:center;display:flex;">
+        AI_VIZ : SUGARCUBE<span style="font-size:0.444em">&#8482;</span></header>
+    <menu class="MAIN_MENU">
+        <button id="INFO_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_INFO_VIEW()">INFO</button>
+        <button id="VIZ_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_VIZ_VIEW()">VIZ</button>
+        <button id="TEST_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_TEST_VIEW()">TRAIN</button>
+        <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
+    </menu>
+    <div id="MSG_BOX_FRAME" style="z-index:10;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);
+        padding:0px; display: flex; justify-content: center; width: 77%;">
+        <aside id="USER_MSG_BOX" style="z-index:11;margin: 0 14%;display: flex;width:90%; max-width: 28em;
+            border: solid 1px yellow;border-radius: 30px;background: black;justify-content: space-around;
+            position:absolute;display:none">
+            <span style="margin: 1em;border: 1px solid orange;border-radius: 44px;
+                box-shadow: 1px 1px 15px orange;">
+                <span id="MSGIcon1" style="padding:1em;">icon1</span>
+                <span id="MSGTXT" style="padding:1em;">message</span>
+                <span id="MSGIcon2" style="padding:1em;">icon1</span>
+            </span>
+        </aside>
+    </div>
+    <section id="INFO_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px cyan;" />
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span> 🍬AI_SUGARCUBE:🧁</span>
+        </span>
+    </header>
+    <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+        <!-- <span style="font-size:1em;">INFO:</span><br> -->
+        <div style="font-size:0.888em;" style="display:flex; flex-direction: column;">
+            <h2>🌌 OVERVIEW: 👓</h2>
+            AI_SUGARCUBE, is a Hyper-dimensional, embed space, DATA VISUALIZATION APP.<br>
+            <br>
+            <hr><br>
+            <h2>🗺️ HISTORY: 🌃</h2>
+            This app was generated as an AI SERIES: from 2022 to 2026.<br>
+            <i>Work in progress.</i>
+            <br><br>
+            <hr><br>
+            <h2>✨ SANDBOX STUDY: 🏖️</h2>
+            1. Visualize AI Manifolds. <br>
+            <div style="display: flex; gap: 22px; margin: 1em 0; justify-content: center;
+                flex-direction: column; align-items: center;">
+                <img src="./images/viz1_ 2025-12-13 114153.png" alt="Visualization 1"
+                    style="width: 33%; border: 1px solid cyan; border-radius: 4px;">
+                <img src="./images/viz2_2025-02-11 114359.png" alt="Visualization 2"
+                    style="width: 44%; border: 1px solid cyan; border-radius: 4px;">
+                <img src="./images/viz3_2025-02-11 113912.png" alt="Visualization 3"
+                    style="width: 55%; border: 1px solid cyan; border-radius: 4px;">
+            </div>
+            <h3>🔭 RESULT: 🔬</h3>
+            AI_SUGARCUBE, is a simple 3D Structure, a 20 X 20 X 20 Sub_Matrix_Viewer: like a telescope, and a
+            microscope, or a
+            kaleidoscope, except as a "tellectoscope".
+            Renders <i>increadable expressiveness</i> of metastate context, from embedded latent-space, in
+            hyper-dimensional vectors.
+            <br>
+            <hr><br>
+            <h2>🌟 GOALS: 💫</h2>
+            <ol>
+                <li>VISUALIZE AI MANIFOLD.</li>
+                <li>DATA IN HIGHER DIMENSIONS, with dynamic legend.</li>
+                <li>Variable Vector Spectrums.</li>
+                <li>In fixed position (optimization for t-SNE/PCA)</li>
+                <li>AI AGENTS undestand the vectors and <i>fill in the blanks!</i></li>
+                <li>Humans in the loop (HITL), conduct brain_viz surgery.</li>
+                <li>Training from AI Agent_as_Judge.</li>
+                <li>With Google Gemini ADK.</li>
+            </ol>
+            <br>
+            <hr><br>
+            <h2>⛰️ PROJECT:🏰</h2>
+            <ul style="list-style:circle; margin-left:12%; padding-left: 0;line-height: 2em;">
+                <li>
+                    <a href="./origins/index_1.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 1
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_2.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 2
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_3.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 3
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_4.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 4
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_5.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 5
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_6.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 6
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_7.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 7
+                    </a>
+                </li>
+                <li>
+                    <a href="./origins/index_8.html" target="_blank"
+                        style="color: cyan; text-decoration: underline; font-weight: bold;">
+                        🔗 AI generation 8 (final 3D template)
+                    </a>
+                </li>
+            </ul>
+            <br>
+            It went way beyond this. Using AI to code GEN.
+            <br>
+            <hr> <br>
+            <section
+                style="border-radius:14px;display: flex; justify-content: center; box-shadow: 0 0 15px green; padding: 1em; margin: 1em 0;">
+                <img src="./images/viz4_2026-01-13 202959.png" alt="Visualization 3"
+                    style="width: 66%; border: 1px solid cyan; border-radius: 4px;">
+            </section>
+            <br>
+            <hr><br>
+            <h2>🔬METHODOLOGY:🤖</h2>
+            1) Following an AI generated roadmap: <br>
+            <h3>
+                METHOD:
+                <pre>I used AI - to build AI!</pre>
+            </h3>
+            <br>
+            2) Adding new tools as modules.<br>
+            3)To visualize the "Neural Network" changes in the MATRIX.
+            <hr>
+            4) With a HEATMAP.<br>That can be <i>played back like a movie</i>.
+            <hr> <br>
+            5) And for the purpose of <b>VISUALIZING "Neural Network" training epochs</b>,
+            with future variations (like
+            mHC), Attention Mechanisms, Activation Functions, etc.</b> <br>
+            <hr><br>
+            <hr>
+            <h2>🤯 CONCLUSION:</h2>
+            In this way, AI could show me - <b> how AI evolved, like a movie.</b>💃
+            <hr>
+            This sandbox contains many graduated alterations - that were used in the "TRAIN" tab.
+            <br>And also for uploading audio and video files.
+            <br>🎬 🎥 📹 🎵 🎶 🔊 🎧
+            <hr><br>
+    </aside>
+    <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
+        <button id="addTickBtn1" class="blackBTN" onclick="">add🎇</button>
+    </menu>
+    </section><!-- END INFO VIEW-->
+    <section id="VIZ_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px #00ffa5;" />
+    <!-- <article class="mainTitle expanderROW">
+        <span class="boxTitle" style="width:100%;">
+            <span><span style="font-size:0.777em; color:cyan">~</span>
+                AI_VIZ:</span>
+        </span>
+    </article> -->
+    <header class="mainTitle expanderROW">
+        <span>AI_VIZ:</span>
+        <span id="refreshVIZ" class="expanderBTN" style="font-size:0.777em;"
+            onclick="window.refreshVIZ(event);">↻</span>
+    </header>    
+    <article id="TKR_RENDER_FRAME">
+        <div id="CANVAS_BRAIN_VIZ_1" style="width: 100%; height: 500px; 
+        border: 1px solid steelblue;border-radius:22px; margin-top: 20px;">
+        </div>
+    </article>
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_DASHBOARD:</span>
+            <span id="expander_BRAIN_VIZ" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article id="DASHBOARD_expander" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <header style="display: flex; flex-flow: row wrap; 
+                justify-content: flex-start; align-items: baseline; 
+                gap: 2em; padding: 1.222em; width: 100%;">
+                <label for="polyInput" style="color: gold; font-family: monospace;
+                    margin-left:44px;">INPUT_TEXT:</label>
+                <input list="poly-options" id="polyInput" class="subSELECTOR" placeholder="Enter prompt..." 
+                    style="width:66%;margin-top:1em;">
+                <datalist id="poly-options">
+                    <option value="TRUTH">
+                    <option value="TRUST">
+                    <option value="MORALITY">
+                    <option value="JUSTICE">
+                    <option value="FREEDOM">
+                </datalist>                
+            </header>
+            <header style="display: flex; flex-flow: row wrap; 
+                justify-content: center; align-items: center; 
+                gap: 2em; padding: 1.222em; width: 100%;">
+                <button id="anim8Btn1" class="blackBTN" onclick="window.togglePulse()">💎 ANIM8</button>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: magenta; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SHOW_CORE_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('CORE', this.checked);">
+                    SHOW_CORE
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: #39FF14; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SHOW_AURA_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('AURA', this.checked);">
+                    SHOW_AURA
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: #7DF9FF; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SHOW_AERO_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleStrataGlow) window.toggleStrataGlow('AERO', this.checked);">
+                    SHOW_AERO
+                </label>
+            </header>
+            <section style="display:flex; flex-direction:column; width:100%; border-top:1px dashed #021d33; padding-top:0.5em; margin-top:0.5em;">
+                <div style="display:flex; justify-content:space-between; margin:0.2em 10%;">
+                    <span style="color:red; font-family:monospace;">X-AXIS (Width):</span>
+                    <select id="VAX_X_SELECTOR" class="subSELECTOR" onchange="window.updateVAX()">
+                        <option value="EN|DIS">Encouraging | Discouraging</option>
+                        <option value="HOT|COLD">Hot | Cold</option>
+                        <option value="FUTURE|PAST">Future | Past</option>
+                    </select>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin:0.2em 10%;">
+                    <span style="color:lime; font-family:monospace;">Y-AXIS (Height):</span>
+                    <select id="VAX_Y_SELECTOR" class="subSELECTOR" onchange="window.updateVAX()">
+                        <option value="FACTZ|FALZ">Actual | Disactual</option>
+                        <option value="HIGH|LOW">High | Low</option>
+                        <option value="KNOWN|UNKNOWN">Known | Unknown</option>
+                    </select>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin:0.2em 10%;">
+                    <span style="color:blue; font-family:monospace;">Z-AXIS (Depth):</span>
+                    <select id="VAX_Z_SELECTOR" class="subSELECTOR" onchange="window.updateVAX()">
+                        <option value="PRESENT|PAST">Recent | Ancient</option>
+                        <option value="NEAR|FAR">Near | Far</option>
+                        <option value="CORE|EDGE">Core | Edge</option>
+                    </select>
+                </div>
+            </section>            
+            <footer style="display: flex; flex-flow: row wrap; justify-content: center; 
+                align-items: center; gap: 2em; padding: 1.222em; width:95%;">
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="MULTI_SELECT_CHK" checked
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="window.MULTI_SELECT = this.checked;">
+                    MULTI_SELECT
+                </label>
+
+                <!-- <div style="display:flex; justify-content:space-between; margin:0.5em 10%;"> -->
+                    <label style="display: flex; align-items: center; cursor: pointer; color:cyan; font-family:monospace; cursor: pointer; 
+                    color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                        <input type="checkbox" id="PIN_DOTZ_CHECKBOX" onchange="window.togglePINDOTZ()"> PIN_DOTZ
+                    </label>
+                <!-- </div> -->
+
+
+
+                <label style="display: flex; align-items: center; cursor: pointer; 
+                    color: cyan; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="NET_SELECT_CHK" checked
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="window.NET_SELECT = this.checked;">
+                    NET_SELECT
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: #39FF8D; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="SUBCUBES_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleSubCubes) window.toggleSubCubes(this.checked);">
+                    SUBCUBES
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: #FF00FF; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="AXIS_SPIRE_CHK" checked
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleAxisSpire) window.toggleAxisSpire(this.checked);">
+                    AXIS_SPIRE
+                </label>
+                <label
+                    style="display: flex; align-items: center; cursor: pointer; color: gold; font-family: monospace; font-size: 0.888em; white-space: nowrap;">
+                    <input type="checkbox" id="AXIS_LABELS_CHK"
+                        style="margin-right: 0.666em; width: 1.2em; height: 1.2em; cursor: pointer;"
+                        onchange="if(window.toggleAxisLabels) window.toggleAxisLabels(this.checked);">
+                    AXIS_LABELS
+                </label>
+            </footer>
+
+            <div class="buttonBAR" style="margin-bottom: 5px;">
+                <!-- <label for="polyInput" style="color: gold; font-family: monospace;
+                    margin-left:44px;">INPUT_POLYSEMY:</label>
+                <input list="poly-options" id="polyInput" class="subSELECTOR" placeholder="Enter words..." 
+                    style="width:44%;margin-bottom:22px;">
+                <datalist id="poly-options">
+                    <option value="BANK">
+                    <option value="BARK">
+                    <option value="CRANE">
+                </datalist> -->
+                <button id="paintPolyBtn" class="blackBTN" 
+                  style="margin-left:44px;margin-bottom:22px;" 
+                  onclick="paintPolysemy()">PAINT_POLYSEMY</button>
+                <button id="PAINT_BTN" class="blackBTN" 
+                style="border-color:magenta; color:magenta;margin-left:44px;margin-bottom:22px;" 
+                onclick="window.paintManifold()">🎨 PAINT_MANIFOLD</button>
+            </div>
+
+            <div id="DASHBOARD_textarea" class="scrollBarV" style="padding: 4em; width: 88%; max-width: 100%; height: 444px; 
+                border: 1px solid steelblue; border-radius: 22px; margin: 0px auto; 
+                background: black; color: steelblue; display: block; user-select : text;
+                box-sizing: border-box; overflow: auto; white-space: pre-wrap; font-family: monospace;"></div>
+        </article>
+    </section>
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_BRAIN_VIZ:</span>
+            <span id="expander_BRAIN_VIZ" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article id="BRAIN_VIZ_expander" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <!-- <canvas id="CANVAS_BRAIN_VIZ_1" class="DisplayCANVAS" style="background:black;border-radius:13px;
+            border:solid 1px steelblue;width: 88%;
+            margin: 2em;"></canvas> -->
+        </article>
+    </section>
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_TIMELINE:</span>
+            <span id="expander_TIMELINE" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article class="scrollBarH" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_TIMELINE_1" class="DisplayCANVAS" style="background:black;border-radius:13px;
+            border:solid 1px steelblue;
+            margin: 2em;"></canvas>
+        </article>
+    </section>
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_PLAYBACK:</span>
+            <span id="expander_PLAYBACK" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <main style="width: 100%; padding:0; margin:0">
+            <article style="display:flex; border-radius:13px;
+                border:solid 1px darkorchid; width:100%; flex-direction: row;">
+                <canvas id="CANVAS_PLAYBACK_1" style="background:black;border-radius:13px;border:solid 1px steelblue;
+                margin: 4%; width:50%;"></canvas>
+                <aside style="width: 50%; display: flex;    flex-direction: column;
+                justify-content: center;
+                align-items: center;">
+                    <button id="playback_BTN_1_" class="blackBTN" style="padding:1em;font-size:0.888em;
+                    line-height: 1.444em;    border-radius: 25px;" ">▶️ PLAY</button>
+                    <footer style=" display:flex; text-align: center;width: 100%; margin-top: 0.444em; justify-content:
+                        center;">
+                        <span id="playback_idx_1_">0</span>&nbsp;of&nbsp;<span id="playback_total_1_">0</span> </footer>
+                </aside>
+            </article>
+        </main>
+    </section>
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_3D_MATRIX:</span>
+            <span id="expander_3D_MATRIX" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <main style="width: 100%; padding:0; margin:0">
+            <article style="border-radius:13px;
+        border:solid 1px darkorchid; 
+          padding: 2em 2em 1em 2em;justify-content: center;display: flex;flex-direction: column; align-items: center;">
+                <div id="3D_MATRIX_1" style="width: 100%; height: 100%; 
+        border:1px solid steelblue; border-radius:13px;"></div>
+                <button id="show_3D_Matrix_1_" style="margin-right: 1em; background:#1a001a;cursor:pointer;
+            border-radius:13px;font-size: 1em; padding: 4px; height: 2em; margin-top:1em;
+            color:steelblue;" onclick="hideShow_3D_Matrix_Click(true)">🎱 GENERATE 🎱</button>
+            </article>
+        </main>
+    </section>
+    <hr>
+    <section id="VIZ_LOG_FRAME" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_VIZ_LOG:</span>
+            <span id="expander_VIZ_LOG" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <main style="width: 100%; padding:0; margin:0"></main>
+        <aside style="width:100%; border-radius:13px;
+                    border:solid 1px darkorchid;padding-bottom:2em;">
+            <textarea id="TXT_AI_VIZ_LOG_1" class="scrollBarV" style="font-size:1.666em; width:80%;
+                        margin: 2.222em auto 0.111em auto;    height: 12em;
+                        display:flex;flex:1; background:black;
+                        border-radius: 13px; border: solid 1px steelblue; box-shadow: 1px 1px 11px 0px cyan;
+                        padding: 4% 2% 4% 6%; color: cyan; line-height: 2.444em;" spellcheck="false"> Log out VIZ events...
+                    </textarea>
+        </aside>
+        </main>
+    </section>
+    </article>
+    <hr>
+    <button id="detailsBtn1" class="blackBTN" onclick="">💎 more details?</button>
+    </section><!-- END VIEW -->
+    <!-- *********************************BOOKZ_-VIEW********************************-->
+    <section id="TEST_VIEW" style="border: solid 1px steelblue;justify-content: center; 
+    flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+    padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+    box-shadow:inset 1px 3px 13px 0px steelblue;" />
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>AI Training Lab:</span>
+        </span>
+    </header>
+    <hr>
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 1 (minimal):</span>
+            <span id="expanderBTN1a" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <aside style="margin:1em;">
+            <h3>DESCRIPTION:</h3>
+            Integrated training generation.
+            Graduated training schedule. Training strategy (dynamic).
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN1b" class="expanderBTN" onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+            <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+                TEST TOKEN 'dbl-letter start' and 'contains b':<input id="TXT_INPUT_1_" type="text"
+                    placeholder="query..." style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+                <button id="TEST_BTN_1_" style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;">TEST</button>
+            </section>
+            <section id="INPUT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+            </section>
+        </menu>
+        <menu id="OUTPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;max-height:10em;
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUBSECTION-->
+    <hr>
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 2 (taxonomy):</span>
+            <span id="expanderBTN2a" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <aside style="margin:1em;">
+            <h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN2b" class="expanderBTN" onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:9em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 4em;padding-left: 1.444em;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+            <section id="INPUT_BOX_2_" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+                TEST TOKEN PRESENCE:<input id="TXT_INPUT_2_" type="text" placeholder="query..." style="margin-left: 1em; background:black;    color: aqua;
+                height: 2em; padding-left: 1em;border-radius: 10px 0px 0px 10px;"></input>
+                <button id="TEST_BTN_2_" style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;">TEST</button>
+            </section>
+            <section id="INPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+            </section>
+        </menu>
+        <menu id="OUTPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUB SECTION 2-->
+    <hr>
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 3:</span>
+            <span id="expanderBTN3a" class="expanderBTN" style="font-size:0.777em;"
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <aside style="margin:1em;">
+            <h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN3b" class="expanderBTN" onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+            <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+                TEST TOKEN PRESENCE:<input id="txtINPUT_3_" type="text" placeholder="query..." style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+                <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
+                    onclick="queryNeuralNetwork_3_(event);">TEST</button>
+            </section>
+            <section id="INPUT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+            </section>
+        </menu>
+        <menu id="OUTPUT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUB SECTION 3-->
+    </section>
+    <section id="DATA_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px cyan;" />
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>DATA</span>
+        </span>
+    </header>
+    <hr />
+    <article id="DATA_RENDER_FRAME"></article>
+    <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+        <span style="font-size:0.888em;">Add text,audio and video files to train AI.</span><br>
+    </aside>
+    <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
+        <button id="addTickBtn1" class="blackBTN" onclick="">add🎇</button>
+        <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
+    </menu>
+    </section><!-- END INFO VIEW-->
+    <script> //*********************MAIN_APP**************************
+        const isPHONE = window.innerWidth <= 600;
+        const currentDate = new Date();
+        const yearNUM = currentDate.getFullYear();
+        const monthNUM = (currentDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+        const dayNUM = currentDate.getDate().toString();//.padStart(2, '0');
+        const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+        // **** END DATES *****************ENDDATES*********************************
+        const screenHeight = window.innerHeight;
+        // **** END HEIGHT *****************ENDHEIGHT*********************************
+        // **** VIEWS ********************************VIEWS***********************
+        const INFO_VIEW = document.getElementById("INFO_VIEW");
+        const VIZ_VIEW = document.getElementById("VIZ_VIEW");
+        const TEST_VIEW = document.getElementById("TEST_VIEW");
+        const DATA_VIEW = document.getElementById("DATA_VIEW");
+        const INFO_VIEW_BTN = document.getElementById("INFO_VIEW_BTN");
+        const VIZ_VIEW_BTN = document.getElementById("VIZ_VIEW_BTN");
+        const TEST_VIEW_BTN = document.getElementById("TEST_VIEW_BTN");
+        const DATA_VIEW_BTN = document.getElementById("DATA_VIEW_BTN");
+        const GALLERY_VIEW_BTN = document.getElementById("GALLERY_VIEW_BTN");
+        const IMPORT_VIEW_BTN = document.getElementById("IMPORT_VIEW_BTN");
+        const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
+        const DATA_TICKR_FRAME = document.getElementById("DATA_TICKR_FRAME");
+        const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
+        const DATA_MOMZ_FRAME = document.getElementById("DATA_MOMZ_FRAME");
+        const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
+        const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
+        const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
+        const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
+        const render_EDIT_MOMZ_Frame = document.getElementById("render_EDIT_MOMZ_Frame");
+        const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
+        const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
+        INFO_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+        VIZ_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+        TEST_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+        //---- DEFAULT TAB SELECTION
+        VIZ_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
+        VIZ_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
+        //---------------------AI_VIEWZ: Local Storage----------------        
+        /************************************************\
+         * - ai_viewz_MATRIX
+         *  - ability to save CONTEXT MEMORY in localstorage
+        \************************************************/
+        // let ai_viewz = {
+        //     expanderBTN1a: true,
+        //     expanderBTN1b: false,//dynamic...
+        // }; //btn id : view state.
+        let ai_viewz = {
+            "expanderBTN1a": true,
+            "expanderBTN1b": true,
+            "expander_BRAIN_VIZ": false,
+            "expander_TIMELINE": false,
+            "expanderBTN2a": true,
+            "expanderBTN3a": true,
+            "expander_VIZ_LOG": false,
+            "expander_PLAYBACK": false,
+            "expander_3D_MATRIX": false
+        }
+
+        function init_ai_viewz() { //READ from LOCAL STORAGE
+            if (!localStorage.ai_viewz) {//first init
+                localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE
+            }
+            ai_viewz = (localStorage.ai_viewz) ?
+                JSON.parse(localStorage.ai_viewz) : {};
+            const allViewKeys = Object.keys(ai_viewz);
+            allViewKeys.forEach((key) => {
+                EXPANDER_Set_OUTERFRAME(key)
+            });
+
+        }; init_ai_viewz();
+        //-------------------------------------END LOCAL STORAGE fns
+        //---- AUTO_LOAD TAB_SELECTION -------------------
+        let main_viewz = {}; //btn id : view state.
+        function init_MAIN_VIEWZ() {
+            if (!localStorage.main_viewz) {//first init
+                localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE
+            }
+            main_viewz = (localStorage.main_viewz) ?
+                JSON.parse(localStorage.main_viewz) : {};
+            // debugger;
+            if (main_viewz['INFO_VIEW_BTN']) { go_INFO_VIEW() }
+            else if (main_viewz['VIZ_VIEW_BTN']) { go_VIZ_VIEW() }
+            else if (main_viewz['TEST_VIEW_BTN']) { go_TEST_VIEW() }
+            else if (main_viewz['DATA_VIEW_BTN']) { go_DATA_VIEW() }
+            else { go_VIZ_VIEW() } //default
+        }; init_MAIN_VIEWZ();
+        // ******************************************VIEW METHODS**********
+        function go_INFO_VIEW() { //TAB SWITCH
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.remove('hiddenTab');
+            INFO_VIEW_BTN.classList.add('selectedMAINBTN');
+            VIZ_VIEW.classList.add('hiddenTab');
+            TEST_VIEW.classList.add('hiddenTab');
+            DATA_VIEW.classList.add('hiddenTab');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = true; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = false; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE
+        }
+        function go_VIZ_VIEW() {
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.add('hiddenTab');
+            VIZ_VIEW.classList.remove('hiddenTab');
+            VIZ_VIEW_BTN.classList.add('selectedMAINBTN');
+            TEST_VIEW.classList.add('hiddenTab');
+            DATA_VIEW.classList.add('hiddenTab');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = true; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = false; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
+        }
+        function go_TEST_VIEW() {
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.add('hiddenTab');
+            VIZ_VIEW.classList.add('hiddenTab');
+            TEST_VIEW.classList.remove('hiddenTab');
+            TEST_VIEW_BTN.classList.add('selectedMAINBTN');
+            DATA_VIEW.classList.add('hiddenTab');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = true; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = false; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
+        }
+        function go_DATA_VIEW() {
+            remove_VIEW_SELECTED();
+            INFO_VIEW.classList.add('hiddenTab');
+            VIZ_VIEW.classList.add('hiddenTab');
+            TEST_VIEW.classList.add('hiddenTab');
+            DATA_VIEW.classList.remove('hiddenTab');
+            DATA_VIEW_BTN.classList.add('selectedMAINBTN');
+            //save state in LOCAL STORAGE
+            if (main_viewz) { main_viewz['INFO_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['VIZ_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['TEST_VIEW_BTN'] = false; }
+            if (main_viewz) { main_viewz['DATA_VIEW_BTN'] = true; }
+            localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
+        }
+        function remove_VIEW_SELECTED() {
+            INFO_VIEW_BTN.classList.remove('selectedMAINBTN');
+            VIZ_VIEW_BTN.classList.remove('selectedMAINBTN');
+            TEST_VIEW_BTN.classList.remove('selectedMAINBTN');
+            DATA_VIEW_BTN.classList.remove('selectedMAINBTN');
+        }
+
+        //---------------------EXPANDER BUTTONS---------------------        
+        function EXPANDER_Click_OUTERFRAME(event) {
+            const parent = event.target.parentElement.parentElement;
+            const siblings = Array.from(parent.children);
+            const siblingSet = siblings.slice(1, siblings.length);//trim top row
+            // Toggle visibility for each following sibling
+            siblingSet.forEach(sibling => {
+                if (sibling.style.display === 'none') {
+                    sibling.style.display = ''; // Show
+                    if (ai_viewz) { ai_viewz[event.target.id] = true; }
+                } else {
+                    sibling.style.display = 'none'; // Hide
+                    if (ai_viewz) { ai_viewz[event.target.id] = false; }
+                }
+            });
+            //save state in LOCAL STORAGE
+            localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE 
+        }
+        function EXPANDER_Set_OUTERFRAME(btnid) {
+            if (!ai_viewz || !ai_viewz[btnid] === undefined) {
+                console.log('error: could not find button'); return;
+            }
+            const btnElem = document.getElementById(btnid);
+            const parent = btnElem.parentElement.parentElement;
+            const siblings = Array.from(parent.children);
+            const siblingSet = siblings.slice(1, siblings.length);//trim top row
+            // Toggle visibility for each following sibling
+            siblingSet.forEach(sibling => {
+                if (ai_viewz[btnid] === true) {
+                    sibling.style.display = ''; // Show
+                } else {
+                    sibling.style.display = 'none'; // Hide
+                }
+            });
+        }
+        //---------------------END EXPANDER VIEW BUTTONS---------------------        
+        function hideShow_3D_Matrix_Click(e) {
+            let MATRIX_1 = document.getElementById('3D_MATRIX_1');
+            MATRIX_1.innerHTML = ''; //clear last render
+            init_3D_MATRIX();
+        }
+        window.updateVAX = function() {
+            // Remove focus from the active element (the select box) to hide the glow
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            if (window.updateAxisLabels) {
+                window.updateAxisLabels();
+            }
+        };
+        // Initialize axis labels on load
+        if (window.updateAxisLabels) window.updateAxisLabels();
+    </script>
+    <!--***************************** END XMPL CHART MODULES******************-->
+    <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
+background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
+        <div style="margin-top:0;margin-bottom:0em;">
+            2020 - <span id="dateTXTStamp"></span>
+            <script>
+                const dateTXTStamp = document.getElementById('dateTXTStamp');
+                dateTXTStamp.innerHTML = new Date().getFullYear();</script> AXI_AI&#8482; by © alpinefalcon at
+            protonmail dot com.
+            MIT License.
+            DESCRIPTION: Template for AI NEURAL NETWORK educational purposes.
+        </div>
+    </legal>
+    <!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+</body>
+</html>
